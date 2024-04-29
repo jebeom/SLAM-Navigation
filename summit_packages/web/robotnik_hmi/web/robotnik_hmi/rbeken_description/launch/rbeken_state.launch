@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<launch>
+	
+  <arg name="robot_id" default="$(optenv ROBOT_ID robot)"/>
+  <arg name="prefix" default="$(arg robot_id)_"/>
+  <arg name="use_joint_state_publisher" default="true"/>
+  
+  <arg name="robot_model"  default="rbeken_rubber.urdf.xacro"  doc="Different robot versions: ('')"/>
+  
+  <arg name="use_gpu_for_simulation" default="true" />
+  <arg name="load_kinematics_file" default="false"/>
+  <arg name="ros_planar_move_plugin" default="false"/>
+  
+  <!-- Load the URDF into ROS parameter server -->
+  <arg name="urdf_file" default="$(find xacro)/xacro $(find rbeken_description)/robots/$(arg robot_model) prefix:=$(arg prefix) use_gpu_for_simulation:=$(arg use_gpu_for_simulation) ros_planar_move_plugin:=$(arg ros_planar_move_plugin) load_kinematics_file:=$(arg load_kinematics_file) --inorder" />
+  <param name="robot_description" command="$(arg urdf_file)" />
+
+  <!-- send fake joint values -->
+  <node if="$(arg use_joint_state_publisher)" name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <param name="use_gui" value="FALSE"/>
+  </node>
+
+  <!-- Combine joint values -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+	<remap from="/joint_states" to="joint_states"/>
+  </node>
+  
+</launch>

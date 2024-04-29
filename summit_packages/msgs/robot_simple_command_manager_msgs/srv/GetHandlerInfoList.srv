@@ -1,0 +1,5 @@
+# If names are specified, the handlers are returned, otherwise all the handlers should be returned
+string[] name
+---
+ReturnMessage ret
+HandlerInfo[] handlers

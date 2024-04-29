@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<launch>
+	<arg name="sim" default="$(optenv ROBOT_RUN_SIMULATION false)"/>
+
+   <!-- launch video stream -->
+	<arg name="prefix" default="camera_webcam_"/>
+	<arg name="ip_address" default="0"/>
+	<arg name="calibration" default=""/>
+	<arg name="node_name" default="camera_webcam"/>
+	<arg name="device_id" default="1"/>
+   <include unless="$(arg sim)" file="$(find video_stream_opencv)/launch/camera.launch" >
+   		<!-- node name and ros graph name -->
+	  	<arg name="device_id" value="$(arg device_id)" />
+	  	<!-- means video device 0, /dev/video0 -->
+	  	<arg name="ip_address" value="0" />
+	  	<!-- set camera fps to (if the device allows) -->
+	  	<arg name="set_camera_fps" value="30"/>
+      	<!-- set buffer queue size of frame capturing to (1 means we want the latest frame only) -->
+      	<arg name="buffer_queue_size" value="0" />
+	  	<!-- throttling the querying of frames to -->
+	  	<arg name="fps" value="30" />
+	  	<!-- setting frame_id -->
+	  	<arg name="prefix" value="$(arg prefix)" />
+	  	<!-- camera info loading, take care as it needs the "file:///" at the start , e.g.:
+	  	"file:///$(find your_camera_package)/config/your_camera.yaml" -->
+	  	<arg name="camera_info_url" value="" />
+	  	<!-- flip the image horizontally (mirror it) -->
+	  	<arg name="flip_horizontal" value="false" />
+	  	<!-- flip the image vertically -->
+	  	<arg name="flip_vertical" value="false" />
+		<!-- force width and height, 0 means no forcing -->
+	    <!--
+	    <arg name="width" value="0"/>
+	    <arg name="height" value="0"/>
+		-->
+	  	<!-- visualize on an image_view window the stream generated -->
+	  	<arg name="visualize" value="false" />
+   </include>
+</launch>

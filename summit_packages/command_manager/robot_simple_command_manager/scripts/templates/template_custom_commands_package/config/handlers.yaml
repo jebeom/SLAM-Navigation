@@ -1,0 +1,6 @@
+command_handlers:
+  - WAIT
+
+WAIT:
+  type: template_custom_commands_package/wait_action_interface/WaitActionInterface
+  namespace: any

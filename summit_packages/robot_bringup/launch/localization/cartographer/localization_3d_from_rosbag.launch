@@ -1,0 +1,78 @@
+<?xml version="1.0" ?>
+<launch>
+
+        <!-- Indicates if the rosbag was captured when Cartographer was running.
+            In that case, recorded map frame should be removed as it is provided by Cartographer -->
+   
+        <arg name="map_frame_in_tf" default="true" />
+<!--
+        <arg name="load_state_filename" default="/home/robert/Documents/Projects/Viesgo/viesgo_bag/pbstream/viesgo_3.bag_.pbstream"/>
+        <arg name="bag_filename" default="/home/robert/Documents/Projects/Viesgo/viesgo_bag/viesgo_route.bag"/>
+-->
+
+        <arg name="load_state_filename" default="$(find summit_viesgo_bringup)/rosbags/una_vuelta_z/una_vuelta_z.pbstream" />
+        <arg name="bag_filename"        default="$(find summit_viesgo_bringup)/rosbags/ruta_1/ruta_1.bag" />
+
+        <param name="/use_sim_time" value="true" /> 
+
+        <!-- <param name="robot_description"
+            textfile="$(find mcq_scan_base_description)/robots/rb_theron.urdf" />
+        <node name="robot_state_publisher" pkg="robot_state_publisher"
+            type="robot_state_publisher" /> 
+        -->
+        
+        
+        <node name="cartographer_localization_node" pkg="cartographer_ros"
+            type="cartographer_node" args="
+                -configuration_directory $(find summit_viesgo_bringup)/config/cartographer
+                -configuration_basename localization_3d.lua
+                -load_state_filename $(arg load_state_filename)"
+            output="screen">
+            <remap from="points2" to="/robot/top_3d_laser/point_cloud" />
+            <remap from="odom" to="/robot/robotnik_base_control/odom" /> 
+            <remap from="imu" to="/robot/imu/data"/>
+        </node>
+
+        <node name="set_initpose" pkg="cartographer_ros" type="set_initpose_from_rviz" output="screen"
+                args="
+                    -configuration_directory $(find summit_viesgo_bringup)/config/cartographer
+                    -configuration_basename localization_3d.lua
+                    -load_state_filename $(arg load_state_filename)" >
+        </node>
+
+
+        <node name="cartographer_occupancy_grid_node" pkg="cartographer_ros"
+            type="cartographer_occupancy_grid_node" args="-resolution 0.03" />
+
+
+ <!-- Run the map server
+    <node pkg="map_server" type="map_server" name="map_server_node"  output="screen" 
+    args="$(find summit_viesgo_bringup)/maps/tanos_map/tanos.yaml" >
+          <param name="frame_id" value="robot_map"/> 
+    </node>
+-->
+
+        <node name="rviz" pkg="rviz" type="rviz" required="true"
+            args="-d $(find summit_viesgo_bringup)/rviz/slam_rosbag.rviz" />
+
+
+        <group if="$(arg map_frame_in_tf)">
+
+            <node name="playbag" pkg="rosbag" type="play" args="-r 1  --clock $(arg bag_filename) /tf:=/tf_in" />
+            
+            <node name="tf_remove_frames" pkg="cartographer_ros" type="tf_remove_frames.py">
+                <remap from="tf_out" to="/tf" />
+                <rosparam param="remove_frames">
+                    - robot_map
+                </rosparam>
+            </node>
+            -
+        </group>
+
+        <group unless="$(arg map_frame_in_tf)">
+            <node name="playbag" pkg="rosbag" type="play"
+                args="-r 1  --clock $(arg bag_filename)" />
+        </group>
+
+
+</launch>

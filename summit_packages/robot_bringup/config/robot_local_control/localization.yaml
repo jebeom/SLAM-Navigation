@@ -1,0 +1,284 @@
+type: robot_local_control_components/LocalizationComponent
+
+desired_freq: 10.0
+# package where the environment configuration files are saved
+environments_config_package: $(arg config_package)
+# config folder inside the config package
+rlc_environments_config_folder: $(arg rlc_environments_folder)
+multimap_environments_config_folder: $(arg multimap_environments_folder)
+maps_folder: maps
+default_environment_config_file: $(arg default_environment_config_file)
+
+standby_min_elapsed_time_to_check_nodes: 5
+standby_min_elapsed_time_to_restart_nodes: 5
+restart_toggle_nodes_time: 1
+
+multimap_server:
+  # root namespace for multimap_server
+  multimap_server_ns: multimap_server
+  # initial environment to load
+  initial_environment: $(arg initial_environment)
+  # optional params (relative namespace)
+  # environments_topic_name: environments
+    # service to load a new environment from yaml
+  # load_environments_service: load_environments
+  # localization_map_ns: localization
+  # navigation_map_ns: routes
+
+components:
+ - mapping_2d
+ - localization_2d
+ - gps
+ - mapping_3d
+ - localization_3d
+
+gps:
+  type: robot_local_control_components/GpsLocalizationModule
+  desired_freq: 10.0
+  auto_start: false
+
+  gps_fix_topic: gps/fix
+  global_frame: $(arg global_frame)
+  base_frame: $(arg base_frame)
+
+  # allowed RLC environment_type
+  rlc_environment_type: occupancy_grid
+  
+  # Mandatory nodes to start/stop when the component loaded / unloaded
+  required_nodes:
+    - navsat_transform_node
+    - ekf_loc_world
+    - multimap_server
+    - move_base
+    - move_base_flex
+    - mbf_state_machine
+    - robotnik_move_base_flex
+  # nodes to toggle after setting the params dynamically
+  toggle_nodes:
+    - move_base
+    - poi_interactive_marker_proxy
+    - move_base_flex
+    - robotnik_move_base_flex
+  # ros params where the global frames needs to be changed
+  global_frame_params:
+    - move_base/global_costmap/global_frame
+    - move_base/TebLocalPlannerROS/map_frame
+    - move_base_flex/global_costmap/global_frame
+    - move_base_flex/TebLocalPlannerROS/map_frame
+    - move_base_flex/global_frame
+    - move_base_flex/map_frame
+    - robotnik_move_base_flex/world_frame
+    - robot_local_control/global_frame
+    - robot_local_control/NavigationComponent/GoToComponent/global_frame
+    - robot_local_control/NavigationComponent/GoToGPSComponent/global_frame
+    - robot_local_control/NavigationComponent/GoToMBFComponent/global_frame
+    - poi_interactive_marker_proxy/target_frame
+
+
+  # namespace for move_base instance
+  move_base_ns: [move_base, move_base_flex]
+
+# requires amcl param -> use_map_topic: true
+localization_2d:
+  type: robot_local_control_components/AmclLocalizationModule
+  auto_start: false
+  desired_freq: 10.0
+
+  # allowed RLC environment_type
+  rlc_environment_type: occupancy_grid
+  
+  # optional params
+  # use_nomotion_update: true
+  # nomotion_update_timeout: 30
+  # nomotion_update_service: request_nomotion_update
+  # amcl_topic: amcl_pose
+  # amcl_initialpose_topic: initialpose
+
+  frame_mapping:
+    frame_mapping_ns: frame_mapping
+    use_frame_mapping: true
+    # optional params (relative namespace)
+    # init_pose_service: init_pose
+    # frame_mapping_save_frame_service_name: save_frame
+    # frame_mapping_set_frame_service: set_frame_id
+
+  move_base_ns: 
+    - move_base
+    - move_base_flex
+  # nodes to start and stop
+  required_nodes:
+    - amcl
+    - multimap_server
+    - move_base
+    - frame_mapping
+    - move_base_flex
+    - mbf_state_machine
+#    - robotnik_move_base_flex
+  # nodes to toggle after setting the params dynamically
+  toggle_nodes:
+    - amcl
+    - move_base
+    - poi_interactive_marker_proxy
+    - move_base_flex
+#    - robotnik_move_base_flex
+  # ros params where the global frames needs to be changed
+  global_frame_params:
+    - move_base/global_costmap/global_frame
+    - move_base/TebLocalPlannerROS/map_frame
+    - robot_local_control/global_frame
+    - robot_local_control/NavigationComponent/GoToComponent/global_frame
+    - robot_local_control/NavigationComponent/GoToMBFComponent/global_frame
+    - amcl/global_frame_id
+    - poi_interactive_marker_proxy/target_frame
+    - robotnik_move_base_flex/world_frame
+    - move_base_flex/global_costmap/global_frame
+    - move_base_flex/TebLocalPlannerROS/map_frame
+
+mapping_2d:
+  type: robot_local_control_components/GmappingLocalizationModule
+  auto_start: false
+  desired_freq: 10.0
+  #  required_nodes: []
+  required_nodes:
+    - slam_gmapping
+    - online_map_saver
+    - move_base
+  # nodes to toggle after setting the params dynamically
+  toggle_nodes:
+    - slam_gmapping
+    - move_base
+  global_frame_params:
+    - slam_gmapping/map_frame
+    - move_base/global_costmap/global_frame
+    - move_base/TebLocalPlannerROS/map_frame
+    - robot_local_control/global_frame
+    - robot_local_control/NavigationComponent/GoToComponent/global_frame
+    - robot_local_control/NavigationComponent/GoToMBFComponent/global_frame
+    - move_base_flex/global_costmap/global_frame
+    - move_base_flex/TebLocalPlannerROS/map_frame
+    - poi_interactive_marker_proxy/target_frame
+
+    # RLC environment_type that this module will create
+  rlc_environment_type: occupancy_grid
+ 
+  # frames used during the map creation
+  global_frame: $(arg map_frame)
+
+  move_base_ns: 
+    - move_base
+    - move_base_flex
+  gmapping_ns: slam_gmapping
+  # service name to retrieve the current map
+  retrieve_map_service: dynamic_map
+  # map topic published by gmapping
+  map_topic: map
+  save_map_service: save_map
+
+
+localization_3d:
+  type: robot_local_control_components/CartographerLocalizationLocalizationModule
+  auto_start: false
+  desired_freq: 10.0
+
+  # allowed RLC environment_type
+  rlc_environment_type: pbstream_3d
+
+  move_base_ns: [move_base, move_base_flex]
+
+  frame_mapping:
+    frame_mapping_ns: frame_mapping
+    use_frame_mapping: false
+    # optional params (relative namespace)
+    # init_pose_service: init_pose
+    # frame_mapping_save_frame_service_name: save_frame
+    # frame_mapping_set_frame_service: set_frame_id
+
+  cartographer:
+    start_trajectory_service: start_trajectory
+    finish_trajectory_service: finish_trajectory
+    load_map_service: load_map
+    load_map_initpose_service: load_map_initpose
+    get_trajectory_states_service: get_trajectory_states
+    set_frozen_trajectory_id_initpose_service: set_frozen_trajectory_id
+    config_package: robot_bringup
+    config_folder: config/localization/cartographer
+    config_filename: localization_3d.lua
+
+  # nodes to start and stop
+  required_nodes:
+    - cartographer_localization_node
+    - cartographer_initpose
+    - multimap_server
+    - move_base
+    - move_base_flex
+    - mbf_state_machine
+    - frame_mapping
+    - gps_filter
+  # nodes to toggle after setting the params dynamically
+  toggle_nodes:
+    - move_base
+    - move_base_flex
+    - poi_interactive_marker_proxy
+  # ros params where the global frames needs to be changed
+  global_frame_params:
+    - move_base/global_costmap/global_frame
+    - move_base/TebLocalPlannerROS/map_frame
+    - robot_local_control/global_frame
+    - robot_local_control/NavigationComponent/GoToComponent/global_frame
+    - robot_local_control/NavigationComponent/GoToMBFComponent/global_frame
+    - poi_interactive_marker_proxy/target_frame
+    - move_base_flex/global_costmap/global_frame
+    - move_base_flex/TebLocalPlannerROS/map_frame
+
+
+mapping_3d:
+  type: robot_local_control_components/CartographerMappingLocalizationModule
+  auto_start: false
+  desired_freq: 10.0
+
+  # RLC environment_type that this module will create
+  rlc_environment_type: pbstream_3d
+
+  # frames used during the map creation
+  global_frame: $(arg map_frame)
+
+  move_base_ns: [move_base, move_base_flex]
+  gmapping_ns: slam_gmapping
+  # service name to retrieve the current map
+  retrieve_map_service: dynamic_map
+  # map topic published by gmapping
+  map_topic: map
+  
+  # service to start/stop rosbag recording
+  rosbag_manager_service: rosbag_manager/set_recording
+
+  cartographer:
+    save_map_service: cartographer_pbstream_creator/write_state
+    config_package: robot_bringup
+    config_folder: config/localization/cartographer
+    config_filename: slam_3d.lua
+    assets_writer_progress_topic: assets_writer_progress
+
+  required_nodes:
+    - cartographer_mapping_node
+    - cartographer_occupancy_grid_node
+    - cartographer_assets_writer
+    - online_map_saver
+    - move_base
+    - move_base_flex
+    - rosbag_manager
+    - cartographer_pbstream_creator
+    - gps_filter
+  # nodes to toggle after setting the params dynamically
+  toggle_nodes:
+    - move_base
+    - move_base_flex
+    - cartographer_pbstream_creator
+  global_frame_params:
+    - move_base/global_costmap/global_frame
+    - move_base/TebLocalPlannerROS/map_frame
+    - robot_local_control/global_frame
+    - robot_local_control/NavigationComponent/GoToComponent/global_frame
+    - robot_local_control/NavigationComponent/GoToMBFComponent/global_frame
+    - move_base_flex/global_costmap/global_frame
+    - move_base_flex/TebLocalPlannerROS/map_frame

@@ -1,0 +1,274 @@
+<?xml version='1.0'?>
+<sdf version='1.6'>
+  <model name='steel_tke_glovebox'>
+    <link name='base_link'>
+      <pose frame=''>0 0 0 0 0 0</pose>
+      <!--inertial>
+         <mass>50</mass>
+        <inertia>
+          <ixx>0.166667</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.166667</iyy>
+          <iyz>0</iyz>
+          <izz>0.166667</izz>
+        </inertia>
+        <pose frame=''>0 0 0 0 0 0</pose>
+      </inertial>
+      <gravity>1</gravity>
+      <self_collide>0</self_collide>
+      <kinematic>0</kinematic-->
+
+      <visual name='visual'>
+        <pose frame=''>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://steel_tke_glovebox/meshes/steel_tke_glovebox.stl</uri>
+            <scale>1 1 1</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <lighting>1</lighting>
+          <!--script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Grey</name>
+          </script-->
+          <ambient>0.3 0.3 0.3 1</ambient>
+          <diffuse>0.7 0.7 0.7 1</diffuse>
+          <specular>0.01 0.01 0.01 1</specular>
+          <emissive>0 0 0 1</emissive>
+          <shader type='vertex'>
+            <normal_map>__default__</normal_map>
+          </shader>
+        </material>
+        <cast_shadows>1</cast_shadows>
+        <transparency>0</transparency>
+      </visual>
+      <collision name='collision'>
+        <laser_retro>0</laser_retro>
+        <max_contacts>10</max_contacts>
+        <pose frame=''>0.498 0.575 0 1.58 0 -1.57</pose>
+        <geometry>
+          <mesh>
+            <uri>model://steel_tke_glovebox/meshes/steel_tke_glovebox_collision.stl</uri>
+            <scale>1 1 1</scale>
+          </mesh>
+        </geometry>
+        <contact>
+          <collide_without_contact>false</collide_without_contact>
+        </contact>
+      </collision>
+    </link>
+
+    <joint name='1_marker_joint' type='fixed'>
+      <parent>base_link</parent>
+      <child>1_marker</child>
+    </joint>
+
+    <link name='1_marker'>
+      <visual name='visual'>
+        <pose frame=''>0.482 -0.44 1.218 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.001 0.297 0.210</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://steel_tke_glovebox/material/scripts</uri>
+            <uri>model://steel_tke_glovebox/material/textures</uri>
+            <name>ARtrack/1_marker</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+
+    <joint name='2_marker_joint' type='fixed'>
+      <parent>base_link</parent>
+      <child>2_marker</child>
+    </joint>
+
+    <link name='2_marker'>
+      <visual name='visual'>
+        <pose frame=''>0.48 -0.015 1.218 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.001 0.297 0.210</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://steel_tke_glovebox/material/scripts</uri>
+            <uri>model://steel_tke_glovebox/material/textures</uri>
+            <name>ARtrack/2_marker</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+
+    <joint name='3_marker_joint' type='fixed'>
+      <parent>base_link</parent>
+      <child>3_marker</child>
+    </joint>
+
+    <link name='3_marker'>
+      <visual name='visual'>
+        <pose frame=''>0.48 0.41 1.218 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.001 0.297 0.210</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://steel_tke_glovebox/material/scripts</uri>
+            <uri>model://steel_tke_glovebox/material/textures</uri>
+            <name>ARtrack/3_marker</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+
+    <joint name='4_marker_joint' type='fixed'>
+      <parent>base_link</parent>
+      <child>4_marker</child>
+    </joint>
+
+    <link name='4_marker'>
+      <visual name='visual'>
+        <pose frame=''>0.435 -0.44 1.78 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.001 0.297 0.210</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://steel_tke_glovebox/material/scripts</uri>
+            <uri>model://steel_tke_glovebox/material/textures</uri>
+            <name>ARtrack/4_marker</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+
+    <joint name='5_marker_joint' type='fixed'>
+      <parent>base_link</parent>
+      <child>5_marker</child>
+    </joint>
+
+    <link name='5_marker'>
+      <visual name='visual'>
+        <pose frame=''>0.435 -0.015 1.78 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.001 0.297 0.210</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://steel_tke_glovebox/material/scripts</uri>
+            <uri>model://steel_tke_glovebox/material/textures</uri>
+            <name>ARtrack/5_marker</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+
+    <joint name='6_marker_joint' type='fixed'>
+      <parent>base_link</parent>
+      <child>6_marker</child>
+    </joint>
+
+    <link name='6_marker'>
+      <visual name='visual'>
+        <pose frame=''>0.435 0.41 1.78 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.001 0.297 0.210</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://steel_tke_glovebox/material/scripts</uri>
+            <uri>model://steel_tke_glovebox/material/textures</uri>
+            <name>ARtrack/6_marker</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+
+    <joint name='gb_marker_16_joint' type='fixed'>
+      <parent>base_link</parent>
+      <child>gb_marker_2</child>
+    </joint>
+
+    <link name='gb_marker_16'>
+      <visual name='visual'>
+        <pose frame=''>0.43 -0.425 0.375 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.001 0.14 0.14</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://steel_tke_glovebox/material/scripts</uri>
+            <uri>model://steel_tke_glovebox/material/textures</uri>
+            <name>ARtrack/gb_marker_16</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+
+    <joint name='gb_marker_2_joint' type='fixed'>
+      <parent>base_link</parent>
+      <child>gb_marker_2</child>
+    </joint>
+
+    <link name='gb_marker_2'>
+      <visual name='visual'>
+        <pose frame=''>0.43 0 0.375 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.001 0.14 0.14</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://steel_tke_glovebox/material/scripts</uri>
+            <uri>model://steel_tke_glovebox/material/textures</uri>
+            <name>ARtrack/gb_marker_2</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+
+    <joint name='gb_marker_9_joint' type='fixed'>
+      <parent>base_link</parent>
+      <child>gb_marker_2</child>
+    </joint>
+
+    <link name='gb_marker_9'>
+      <visual name='visual'>
+        <pose frame=''>0.43 0.425 0.375 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.001 0.14 0.14</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://steel_tke_glovebox/material/scripts</uri>
+            <uri>model://steel_tke_glovebox/material/textures</uri>
+            <name>ARtrack/gb_marker_9</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+
+    <!--static>0</static-->
+    <static>1</static>
+    <allow_auto_disable>1</allow_auto_disable>
+  </model>
+</sdf>

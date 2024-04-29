@@ -1,0 +1,107 @@
+signals:
+
+  - id: "emergency_stop"
+    enabled: false
+    led_label: ["all_leds"]
+    mode: "blink"
+    color: [255, 0, 0, 0]
+    ms_on: 1000
+    ms_off: 1000
+
+  - id: "safety_obstacle_detected"
+    enabled: false
+    led_label: ["all_leds"]
+    mode: "blink"
+    color: [255, 0, 0, 0]
+    ms_on: 500
+    ms_off: 500
+
+  - id: "sensor_error"
+    enabled: false
+    led_label: ["all_leds"]
+    mode: "blink"
+    color: [255, 80, 0, 0]
+    ms_on: 400
+    ms_off: 400
+    background_R: 0
+    background_G: 0
+    background_B: 0
+    background_W: 0
+
+  - id: "base_controller_error"
+    enabled: false
+    led_label: ["all_leds"]
+    mode: "blink"
+    color: [255, 80, 0, 0]
+    ms_on: 300
+    ms_off: 300
+    background_R: 0
+    background_G: 0
+    background_B: 0
+    background_W: 0
+
+  - id: "arm_controller_error"
+    enabled: false
+    led_label: ["all_leds"]
+    mode: "blink"
+    color: [255, 80, 0, 0]
+    ms_on: 300
+    ms_off: 300
+    background_R: 0
+    background_G: 0
+    background_B: 0
+    background_W: 0
+
+  - id: "charging"
+    enabled: false
+    led_label: ["front","back","right","left"]
+    mode: "shift"
+    color: [0, 255, 0, 0]
+    direction: "left"
+    led_increment: 5
+    speed: 4000
+    background_R: 255
+    background_G: 80
+    background_B: 0
+    background_W: 0
+
+  - id: "low_battery"
+    enabled: false
+    enabled: false
+    led_label: ["all_leds"]
+    mode: "blink"
+    color: [0, 255, 0, 0]
+    ms_on: 1000
+    ms_off: 1000
+    background_R: 255
+    background_G: 80
+    background_B: 0
+    background_W: 0
+  
+  - id: "robot_moving"
+    enabled: false
+    led_label: ["all_leds"]
+    mode: "blink"
+    color: [0, 255, 0, 0]
+    ms_on: 1000
+    ms_off: 500
+
+  - id: "safety_standby"
+    enabled: false
+    led_label: ["all_leds"]
+    mode: "blink"
+    color: [0, 0, 255, 0]
+    ms_on: 100
+    ms_off: 100
+    background_R: 0
+    background_G: 0
+    background_B: 0
+    background_W: 0
+    fade_in: 2000
+    fade_out: 2000
+
+  - id: "robot_idle"
+    enabled: true
+    led_label: ["all_leds"]
+    mode: "paint"
+    color: [0 , 255, 0, 0]

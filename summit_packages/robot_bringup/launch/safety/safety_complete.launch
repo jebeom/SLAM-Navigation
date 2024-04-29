@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="id_robot" default="$(optenv ROBOT_ID robot)"/>
+  
+  <arg name="protocol" default="$(optenv ROBOT_SAFETY_PROTOCOL modbus)"/>
+  <arg name="device_manufacturer" default="$(optenv ROBOT_SAFETY_DEVICE_MANUFACTURER flexisoft)"/>
+  <arg name="device_model" default="$(optenv ROBOT_SAFETY_DEVICE_MODEL none)"/>
+  <arg name="ip_address" default="$(optenv ROBOT_SAFETY_DEVICE_IP 192.168.0.250)"/>
+  <arg name="laser_model" default="$(optenv ROBOT_SAFETY_LASER sick_microscan3)"/>
+
+  <group ns="$(arg id_robot)">
+    <!-- Launch communication -->
+    <include file="$(find robot_bringup)/launch/safety/protocol/robotnik_$(arg protocol).launch">
+      <arg name="device_manufacturer" value="$(arg device_manufacturer)"/>
+      <arg name="device_model" value="$(arg device_model)"/>
+      <arg name="ip_address" value="$(arg ip_address)"/>
+    </include>
+
+    <!-- Launch safety module -->
+    <node if="$(eval protocol != 'eip')" pkg="safety_module" type="safety_module_$(arg protocol)_node.py" name="safety_module" output="screen">
+      <rosparam file="$(find robot_bringup)/config/safety/$(arg protocol)/$(arg laser_model).yaml" command="load"/>
+    </node>
+    
+    <!-- start modbus_io node -->
+    <!--node pkg="safety_module" type="safety_module_node.py" name="safety_module" output="screen">
+      <rosparam file="$(find robot_bringup)/config/bringup/safety_module/$(arg laser_model).yaml" command="load"/>
+    </node-->
+  </group>
+
+</launch>
+

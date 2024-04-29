@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package>
+  <name>robotnik_gazebo_models</name>
+  <version>1.1.0</version>
+  <description>The robotnik_gazebo_models package</description>
+
+  <maintainer email="rnavarro@robotnik.es">Román Navarro</maintainer>
+  <maintainer email="rvasquez@robotnik.es">Robert Vásquez</maintainer>
+
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <export>
+
+  </export>
+</package>

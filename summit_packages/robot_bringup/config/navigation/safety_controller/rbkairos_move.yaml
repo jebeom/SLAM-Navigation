@@ -1,0 +1,21 @@
+robot_x_size: 0.978
+robot_y_size: 0.776
+
+warning_max_x: 0.55
+warning_min_x: -0.57
+warning_max_y: 0.50
+warning_min_y: -0.50
+warning_max_linear_speed_x: 0.05
+warning_max_angular_speed: 0.1
+
+max_x: 0.48
+min_x: -0.58    
+max_y: 0.45
+min_y: -0.45
+collision_max_linear_speed_x: 0.0
+collision_max_angular_speed_x: 0.0
+
+cmd_vel_in: safety_controller_move/cmd_vel
+cmd_vel_out: move/cmd_vel
+laser_1_topic: front_laser/scan
+laser_2_topic: rear_laser/scan

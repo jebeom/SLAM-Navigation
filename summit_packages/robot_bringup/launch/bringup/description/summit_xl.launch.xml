@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="urdf_xacro"  default="summit_xl_std.urdf.xacro"/>  
+  <arg name="prefix" default="robot_"/>
+  <arg name="kinematics" default="omni"/>
+  
+  <arg name="xacro_path" default="none"/>
+  <arg if="$(eval xacro_path == 'none')" name="path" default="$(find summit_xl_description)/robots/$(arg urdf_xacro)"/>
+  <arg unless="$(eval xacro_path == 'none')" name="path" value="$(arg xacro_path)"/>
+
+  <!-- Load the URDF into ROS parameter server -->
+  <group if="$(eval kinematics =='omni')">
+    <param name="robot_description" command="$(find xacro)/xacro '$(arg path)' prefix:=$(arg prefix) omni_wheels:=true --inorder" />
+  </group>
+  <group unless="$(eval kinematics =='omni')">
+    <param name="robot_description" command="$(find xacro)/xacro '$(arg path)' prefix:=$(arg prefix) omni_wheels:=false --inorder" />
+  </group>
+</launch>

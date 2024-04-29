@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="robotiq_85_gripper_transmission" params="prefix">
+
+    <transmission name="${prefix}left_knuckle_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${prefix}left_knuckle_joint">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${prefix}left_knuckle_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </actuator>
+    </transmission>
+
+    <transmission name="${prefix}left_inner_knuckle_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${prefix}left_inner_knuckle_joint">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${prefix}left_inner_knuckle_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </actuator>
+    </transmission>
+
+    <transmission name="${prefix}left_inner_top_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${prefix}left_finger_tip_joint">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${prefix}left_finger_tip_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </actuator>
+    </transmission>
+
+    <transmission name="${prefix}right_knuckle_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${prefix}right_knuckle_joint">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${prefix}right_knuckle_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </actuator>
+    </transmission>
+
+    <transmission name="${prefix}right_inner_knuckle_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${prefix}right_inner_knuckle_joint">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${prefix}right_inner_knuckle_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </actuator>
+    </transmission>
+
+    <transmission name="${prefix}right_inner_top_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${prefix}right_finger_tip_joint">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${prefix}right_finger_tip_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </actuator>
+    </transmission>
+
+   
+    <xacro:macro name="mimic_joint_plugin_gazebo" params="parent_joint mimic_joint has_pid:=false multiplier:=1.0 offset:=0 sensitiveness:=0.0 max_effort:=1.0 robot_namespace:=''">
+      <gazebo>
+          <plugin name="${mimic_joint}_mimic_joint_plugin" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+              <joint>${parent_joint}</joint>
+              <mimicJoint>${mimic_joint}</mimicJoint>
+              <xacro:if value="${has_pid}">                    
+              <hasPID />
+              </xacro:if>
+              <multiplier>${multiplier}</multiplier>
+              <offset>${offset}</offset>
+              <sensitiveness>${sensitiveness}</sensitiveness>   
+              <maxEffort>${max_effort}</maxEffort>              
+              <xacro:unless value="${robot_namespace == ''}">
+                  <robotNamespace>($robot_namespace)</robotNamespace>
+              </xacro:unless>
+          </plugin>
+      </gazebo>
+    </xacro:macro>
+    
+    <xacro:mimic_joint_plugin_gazebo parent_joint="${prefix}left_knuckle_joint" 
+        mimic_joint="${prefix}right_knuckle_joint" has_pid="false" multiplier="1.0" 
+        max_effort="10.0" />
+
+    <xacro:mimic_joint_plugin_gazebo parent_joint="${prefix}left_knuckle_joint" 
+        mimic_joint="${prefix}left_inner_knuckle_joint" has_pid="false" multiplier="1.0" 
+        max_effort="10.0" />
+
+    
+    <xacro:mimic_joint_plugin_gazebo parent_joint="${prefix}left_knuckle_joint" 
+        mimic_joint="${prefix}right_inner_knuckle_joint" has_pid="false" multiplier="1.0" 
+        max_effort="10.0" />
+
+     <xacro:mimic_joint_plugin_gazebo parent_joint="${prefix}left_knuckle_joint" 
+        mimic_joint="${prefix}left_finger_tip_joint" has_pid="false" multiplier="1.0" 
+        max_effort="10.0" />   
+
+    <xacro:mimic_joint_plugin_gazebo parent_joint="${prefix}left_knuckle_joint" 
+        mimic_joint="${prefix}right_finger_tip_joint" has_pid="false" multiplier="1.0" 
+        max_effort="10.0" />
+
+  </xacro:macro>
+
+</robot>

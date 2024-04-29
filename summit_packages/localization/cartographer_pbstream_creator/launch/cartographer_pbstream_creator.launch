@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<launch>
+
+	<!-- Set namespace -->
+	<!--arg name="id_robot" default="robot"/-->
+
+	<!-- Desired frequency -->
+	<arg name="desired_freq" default="2.0" />
+
+	<!-- Name of the example of a subscriber -->
+	<arg name="cartographer_save_pbstream_service_name" default="/robot/write_state" />
+
+	<!--group ns="$(arg id_robot)"-->
+
+		<!-- start CartographerPbstreamCreator node -->
+		<node name="cartographer_pbstream_creator" pkg="cartographer_pbstream_creator" type="cartographer_pbstream_creator_node.py" output="screen" respawn="false">
+			<param name="desired_freq" value="$(arg desired_freq)"/>
+			<param name="cartographer_save_pbstream_service_name" value="$(arg cartographer_save_pbstream_service_name)"/>
+		</node>
+
+	<!--/group-->
+
+</launch>

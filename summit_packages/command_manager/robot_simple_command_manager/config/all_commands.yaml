@@ -1,0 +1,263 @@
+# This file is only used as an example of how we can configure the different
+# types of handler to set the commands. Some handlers can be configured with
+# different namespaces than in this file and could be used with a different
+# tag name to make them more semantic
+base_command_list:
+# Actions
+  - DOCK
+  - MOVE
+  - TURN
+  - GOTO
+  - GOTO_WP
+  - MOVE_PTZ
+  - MOVE_PTZ_TAG
+  - WAIT
+# Procedures
+  - RLC_CHARGE
+  - RLC_GOTO_GPS
+  - RLC_GOTO
+  - RLC_GOTO_TAG_MAP
+  - RLC_GOTO_TAG
+  - RLC_TURN
+  - RLC_MOVE
+  - RLC_PICK
+  - RLC_PLACE
+  - RLC_UNCHARGE
+# Publishers
+  - PUB_BOOL
+  - PUB_PTZ_COMMAND
+# Services
+  - SET_PARAM
+  - SET_TEB_AUTOSIZE_PARAM
+  - SET_MIN_SAMPLES_PARAM
+  - SET_TEB_ODOM_TOPIC_PARAM
+  - SET_TEB_MAX_VEL_X_PARAM
+  - ELEVATOR
+  - START_RECORD_CAMERA
+  - STOP_RECORD_CAMERA
+  - RECORD_CAMERA
+  - LOCALIZATION_SAVE_FRAME
+  - LOCALIZATION_SAVE_MAP
+  - SET_DRIVER_DO
+  - LOCALIZATION_2D_SET_ENVIRONMENT
+  - SET_LASER_MODE
+  - LOCALIZATION_SET_POSE
+  - LOCALIZATION_SET_POSE_FRAME
+  - SET_BOOL
+  - SET_TRIGGER
+  - LOCALIZATION_START_MODULE
+# Subscribers
+  - WAIT_EMERGENCY_STOP
+  - WAIT_DRIVER_DI
+  - WAIT_DRIVER_DO
+
+
+# Actions
+DOCK:
+  type: dock_action_interface/DockActionInterface
+  namespace: diff_docker
+  communication_timeout: 10
+
+MOVE:
+  type: move_action_interface/MoveActionInterface
+  namespace: move
+  communication_timeout: 10
+
+TURN:
+  type: move_action_interface/TurnActionInterface
+  namespace: move
+  communication_timeout: 10
+
+GOTO:
+  type: move_base_action_interface/MoveBaseActionInterface
+  namespace: move_base
+  frame_id: robot_map
+  communication_timeout: 10
+
+GOTO_WP:
+  type: move_base_action_interface/MoveBaseActionInterface
+  namespace: move_base
+  frame_id: robot_map
+  communication_timeout: 10
+
+MOVE_PTZ:
+  type: ptz_action_interface/PtzActionInterface
+  ros_control: True                                    # Use pan_topic, tilt_topic and zoom_topic or ptz_topic
+  ptz_topic: ptz/command                               # Option 1
+  pan_topic: joint_pan_position_controller/command     # Option 2
+  tilt_topic: joint_tilt_position_controller/command   # Option 2
+  zoom_topic: joint_zoom_position_controller/command   # Option 2
+
+MOVE_PTZ_TAG:
+  type: ptz_tag_action_interface/PtzTagActionInterface
+  ros_control: True                                    # Use pan_topic, tilt_topic and zoom_topic or ptz_topic
+  ptz_topic: ptz/command                               # Option 1
+  pan_topic: joint_pan_position_controller/command     # Option 2
+  tilt_topic: joint_tilt_position_controller/command   # Option 2
+  zoom_topic: joint_zoom_position_controller/command   # Option 2
+  pan_joint: ptz_camera_pan_joint                      # Required 
+  tilt_joint: ptz_camera_tilt_joint                    # Required
+  zoom_joint: ptz_camera_zoom_joint                    # Required
+  get_poi_ns: poi_manager/get_poi
+  frame_id: robot_map
+  default_environment: unknown
+
+WAIT:
+  type: wait_action_interface/WaitActionInterface
+  namespace: any
+
+# Procedures
+RLC_CHARGE:
+  type: charge_procedure_interface/ChargeProcedureInterface
+  namespace: ChargeComponent
+
+RLC_GOTO_GPS:
+  type: goto_gps_procedure_interface/GoToGPSProcedureInterface
+  namespace: GoToGPSComponent
+
+RLC_GOTO:
+  type: goto_procedure_interface/GoToProcedureInterface
+  namespace: GoToComponent
+  frame_id: robot_map
+
+RLC_GOTO_TAG_MAP:
+  type: goto_tag_map_procedure_interface/GoToTagMapProcedureInterface
+  namespace: GoToComponent
+  get_poi_params: poi_manager/get_poi_params
+
+RLC_GOTO_TAG:
+  type: goto_tag_procedure_interface/GoToTagProcedureInterface
+  namespace: GoToComponent
+  get_poi_ns: poi_manager/get_poi
+  frame_id: robot_map
+  default_environment: unknown
+
+RLC_TURN:
+  type: move_angular_procedure_interface/MoveAngularProcedureInterface
+  namespace: MoveComponent
+
+RLC_MOVE:
+  type: move_linear_procedure_interface/MoveLinearProcedureInterface
+  namespace: MoveComponent
+
+RLC_PICK:
+  type: pick_procedure_interface/PickProcedureInterface
+  namespace: PickComponent
+
+RLC_PLACE:
+  type: place_procedure_interface/PlaceProcedureInterface
+  namespace: PlaceComponent
+
+RLC_UNCHARGE:
+  type: uncharge_procedure_interface/UnchargeProcedureInterface
+  namespace: UnchargeComponent
+
+# Publishers
+PUB_BOOL:
+  type: bool_publisher_interface/BoolPublisherInterface
+  namespace: command_bool
+
+PUB_PTZ_COMMAND:
+  type: ptz_position_command_publisher_interface/PtzPositionCommandPublisherInterface
+  namespace: ptz/command
+
+# Services
+SET_PARAM:
+  type: dynamic_reconfigure_service_interface/SetParameterServiceInterface
+  namespace: any
+  modules:
+    navigation_controller: move_base
+    navigation_local_planner: move_base/TebLocalPlanner
+
+# This handler can be used to dynamic reconfigure any bool parameter
+SET_TEB_AUTOSIZE_PARAM:
+  type: dynamic_reconfigure_service_interface/DynamicReconfigureBoolServiceInterface
+  namespace: move_base/TebLocalPlanner/set_parameters
+  param_name: teb_autosize
+
+# This handler can be used to dynamic reconfigure any int parameter
+SET_MIN_SAMPLES_PARAM:
+  type: dynamic_reconfigure_service_interface/DynamicReconfigureIntServiceInterface
+  namespace: move_base/TebLocalPlanner/set_parameters
+  param_name: min_samples
+
+# This handler can be used to dynamic reconfigure any string parameter
+SET_TEB_ODOM_TOPIC_PARAM:
+  type: dynamic_reconfigure_service_interface/DynamicReconfigureStrServiceInterface
+  namespace: move_base/TebLocalPlanner/set_parameters
+  param_name: odom_topic
+
+# This handler can be used to dynamic reconfigure any float parameter
+SET_TEB_MAX_VEL_X_PARAM:
+  type: dynamic_reconfigure_service_interface/DynamicReconfigureDoubleServiceInterface
+  namespace: move_base/TebLocalPlanner/set_parameters
+  param_name: max_vel_x
+
+ELEVATOR:
+  type: elevator_service_interface/ElevatorServiceInterface
+  namespace: robotnik_base_control/set_elevator
+
+START_RECORD_CAMERA:
+  type: record_service_interface/StartRecordServiceInterface
+  namespace: process_executor/record_rgb/record
+
+STOP_RECORD_CAMERA:
+  type: record_service_interface/StopRecordServiceInterface
+  namespace: process_executor/record_rgb/record
+
+RECORD_CAMERA:
+  type: record_service_interface/RecordTimeServiceInterface
+  namespace: process_executor/record_rgb/record
+
+LOCALIZATION_SAVE_FRAME:
+  type: save_frame_service_interface/SaveFrameServiceInterface
+  namespace: robot_local_control/LocalizationComponent/localization_2d/save_frame
+
+LOCALIZATION_SAVE_MAP:
+  type: save_map_service_interface/SaveMapServiceInterface
+  namespace: robot_local_control/LocalizationComponent/save_map
+
+SET_DRIVER_DO:
+  type: set_digital_output_service_interface/SetDigitalOutputServiceInterface
+  namespace: robotnik_base_hw/set_digital_output
+
+LOCALIZATION_2D_SET_ENVIRONMENT:
+  type: set_environment_service_interface/SetEnvironmentServiceInterface
+  namespace: robot_local_control/LocalizationComponent/localization_2d/switch_environment
+
+SET_LASER_MODE:
+  type: set_laser_mode_service_interface/SetLaserModeServiceInterface
+  namespace: safety_module/set_laser_mode
+
+LOCALIZATION_SET_POSE:
+  type: set_pose_2d_stamped_service_interface/SetPose2dStampedServiceInterface
+  namespace: robot_local_control/LocalizationComponent/set_pose
+
+LOCALIZATION_SET_POSE_FRAME:
+  type: set_pose_from_frame_service_interface/SetPoseFromFrameServiceInterface
+  namespace: frame_mapping/init_pose_from_frame
+
+SET_BOOL:
+  type: std_setbool_service_interface/StdSetBoolServiceInterface
+  namespace: notify_event/trigger
+
+SET_TRIGGER:
+  type: std_trigger_service_interface/StdTriggerServiceInterface
+  namespace: notify_event/trigger2
+
+LOCALIZATION_START_MODULE:
+  type: switch_module_service_interface/SwitchModuleServiceInterface
+  namespace: robot_local_control/LocalizationComponent/start_module
+
+# Subscribers
+WAIT_EMERGENCY_STOP:
+  type: bool_subscriber_interface/BoolSubscriberInterface
+  namespace: robotnik_base_hw/emergency_stop
+
+WAIT_DRIVER_DI:
+  type: wait_di_subscriber_interface/WaitDISubscriberInterface
+  namespace: robotnik_base_hw/io
+
+WAIT_DRIVER_DO:
+  type: wait_do_subscriber_interface/WaitDOSubscriberInterface
+  namespace: robotnik_base_hw/io

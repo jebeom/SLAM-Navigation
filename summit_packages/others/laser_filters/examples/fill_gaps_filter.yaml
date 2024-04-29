@@ -1,0 +1,5 @@
+scan_filter_chain:
+- name: fill_gaps
+  type: laser_filters/LaserScanFillGapsFilter
+  params:
+    upper_replacement_value: 4.99

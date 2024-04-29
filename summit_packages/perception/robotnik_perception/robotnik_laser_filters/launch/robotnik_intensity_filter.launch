@@ -1,0 +1,7 @@
+<launch>
+  <arg name="input_topic" default="scan" />
+  <node pkg="laser_filters" type="scan_to_scan_filter_chain" output="screen" name="laser_filter">
+    <remap from="scan" to="$(arg input_topic)" />
+    <rosparam command="load" file="$(find robotnik_laser_filters)/config/linear_interpolation_intensity_filter.yaml" />
+  </node>
+</launch>

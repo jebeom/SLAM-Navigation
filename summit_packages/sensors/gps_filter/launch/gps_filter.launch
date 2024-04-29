@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<launch>
+
+	<!-- Set namespace -->
+	<!--arg name="id_robot" default="robot"/-->
+
+	<!-- Desired frequency -->
+	<arg name="desired_freq" default="1.0" />
+	<!-- Name of the example of a subscriber -->
+	<arg name="example_subscriber_name" default="example" />
+
+	<arg name="gps_fix_input" default="/robot/gps/fix" />
+	<arg name="gps_fix_output" default="gps/fix_output" />
+	<arg name="gps_fix_covariance_latitude_longitude" default="0.1" />
+	<arg name="limit_fix_covariance_altitude" default="0.5" />
+
+	<!-- Load .yaml example -->
+	<rosparam file="$(find gps_filter)/config/example.yaml" command="load" />
+
+	<!--group ns="$(arg id_robot)"-->
+
+		<!-- start GPSFilter node -->
+		<node name="gps_filter" pkg="gps_filter" type="gps_filter_node.py" output="screen" respawn="false">
+			<param name="gps_fix_input" value="$(arg gps_fix_input)"/>
+			<param name="gps_fix_output" value="$(arg gps_fix_output)"/>
+			<param name="gps_fix_covariance_latitude_longitude" value="$(arg gps_fix_covariance_latitude_longitude)"/>
+			<param name="limit_fix_covariance_altitude" value="$(arg limit_fix_covariance_altitude)"/>
+		</node>
+
+	<!--/group-->
+
+</launch>

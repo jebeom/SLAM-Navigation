@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="id_robot" default="$(optenv ROBOT_ID robot)"/>
+  <arg name="prefix" default="$(arg id_robot)_"/>
+  <arg name="camera_topic" default="$(optenv ROBOT_PERCEPTION_CAMERA_TOPIC front_rgbd_camera/rgb/image_raw)" />
+  <arg name="camera_info_topic" default="$(optenv ROBOT_PERCEPTION_CAMERA_INFO_TOPIC front_rgbd_camera/rgb/camera_info)" />
+  <arg name="gps_model" default="$(optenv ROBOT_GPS_MODEL none)" />
+  <arg name="laser_model" default="$(optenv ROBOT_LASER_1_MODEL none)" />
+  <arg name="run_3d_localization" default="$(optenv ROBOT_RUN_3D_LOCALIZATION false)" />
+
+ <!-- NOTE: this launch will work as long as it is run with rosmon + the option 'no-start' -->
+  <group ns="$(arg id_robot)">
+    <!-- GPS -->
+    <include if="$(eval gps_model != 'none')" file="$(find robot_bringup)/launch/localization/navsat_transform_node.launch"/>
+    <include if="$(eval gps_model != 'none')" file="$(find robot_bringup)/launch/localization/robot_localization_world.launch">
+      <arg name="prefix" value="$(arg prefix)"/>
+    </include>
+
+    <include file="$(find robot_bringup)/launch/localization/multimap_server.launch">
+    </include>
+
+    <!-- gmapping -->
+    <include if="$(eval laser_model != 'none')" file="$(find robot_bringup)/launch/localization/slam_gmapping.launch">
+      <arg name="id_robot" value="id_robot"/>
+    </include>
+
+    <!-- Run the map saver -->
+    <node if="$(eval laser_model != 'none')" name="online_map_saver" pkg="multimap_server" type="online_map_saver"/>
+
+    <!-- amcl -->
+    <include if="$(eval laser_model != 'none')" file="$(find robot_bringup)/launch/localization/amcl.launch"/>
+    <include if="$(eval laser_model != 'none')" file="$(find robot_bringup)/launch/localization/frames_mapping.launch"/>
+
+    <!-- cartographer -->
+    <include if="$(arg run_3d_localization)" file="$(find robot_bringup)/launch/localization/cartographer/localization_3d.launch"/>
+    <include if="$(arg run_3d_localization)" file="$(find robot_bringup)/launch/localization/cartographer/online_slam_3d.launch"/>
+    <include if="$(arg run_3d_localization)" file="$(find robot_bringup)/launch/localization/cartographer/assets_writer_ros_map.launch"/>
+    <include if="$(arg run_3d_localization)" file="$(find robot_bringup)/launch/localization/cartographer/gps_filter.launch"/>
+
+
+  </group>
+
+</launch>

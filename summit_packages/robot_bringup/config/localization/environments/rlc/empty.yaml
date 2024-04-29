@@ -1,0 +1,4 @@
+empty:
+  environment_type: occupancy_grid
+  config_package: robot_bringup
+  multimap_environment: config/localization/environments/multimap/empty.yaml

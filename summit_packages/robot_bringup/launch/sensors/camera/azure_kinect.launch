@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+
+<!-- This launch is intended to bringup all the cameras of the system -->
+<launch>
+	<arg name="sim" default="$(optenv ROBOT_RUN_SIMULATION false)"/>
+
+  <arg name="id_robot"                          default="$(optenv ROBOT_ID robot)"/>
+  <arg name="prefix"                            default="$(arg id_robot)_"/>
+
+  <arg name="ip_address"                        default="$(optenv ROBOT_CAMERA_1_IP )"/>
+  <arg name="calibration"                       default="$(optenv ROBOT_CAMERA_1_CALIBRATION none)"/>
+  <arg name="node_name"                         default="$(optenv ROBOT_CAMERA_1_ID camera_1)"/>
+  <arg name="device_id"                         default="$(optenv ROBOT_CAMERA_1_DEVICE_ID '')"/>
+
+  <arg name="tf_prefix"                         default="$(arg prefix)" />  <!-- Enable or disable the depth camera -->
+  <arg name="depth_enabled"                     default="true" />           <!-- Enable or disable the depth camera -->
+  <arg name="depth_mode"                        default="WFOV_UNBINNED" />  <!-- Set the depth camera mode, which affects FOV, depth range, and camera resolution. See Azure Kinect documentation for full details. Valid options: NFOV_UNBINNED, NFOV_2X2BINNED, WFOV_UNBINNED, WFOV_2X2BINNED, and PASSIVE_IR -->
+  <arg name="depth_unit"                        default="16UC1" />          <!-- Depth distance units. Options are: "32FC1" (32 bit float metre) or "16UC1" (16 bit integer millimetre) -->
+  <arg name="color_enabled"                     default="true" />           <!-- Enable or disable the color camera -->
+  <arg name="color_format"                      default="bgra" />           <!-- The format of RGB camera. Valid options: bgra, jpeg -->
+  <arg name="color_resolution"                  default="1536P" />          <!-- Resolution at which to run the color camera. Valid options: 720P, 1080P, 1440P, 1536P, 2160P, 3072P -->
+  <arg name="fps"                               default="5" />              <!-- FPS to run both cameras at. Valid options are 5, 15, and 30 -->
+  <arg name="point_cloud"                       default="true" />           <!-- Generate a point cloud from depth data. Requires depth_enabled -->
+  <arg name="rgb_point_cloud"                   default="true" />           <!-- Colorize the point cloud using the RBG camera. Requires color_enabled and depth_enabled -->
+  <arg name="point_cloud_in_depth_frame"        default="false" />          <!-- Whether the RGB pointcloud is rendered in the depth frame (true) or RGB frame (false). Will either match the resolution of the depth camera (true) or the RGB camera (false). -->
+  <arg name="required"                          default="false" />          <!-- Argument which specified if the entire launch file should terminate if the node dies -->
+  <arg name="sensor_sn"                         default="$(arg device_id)"/>  <!-- Sensor serial number. If none provided, the first sensor will be selected -->
+  <arg name="recording_file"                    default="''" />               <!-- Absolute path to a mkv recording file which will be used with the playback api instead of opening a device -->
+  <arg name="recording_loop_enabled"            default="false" />          <!-- If set to true the recording file will rewind the beginning once end of file is reached -->
+  <arg name="body_tracking_enabled"             default="false" />          <!-- If set to true the joint positions will be published as marker arrays -->
+  <arg name="body_tracking_smoothing_factor"    default="0.0" />            <!-- Set between 0 for no smoothing and 1 for full smoothing -->
+  <arg name="rescale_ir_to_mono8"               default="false" />          <!-- Whether to rescale the IR image to an 8-bit monochrome image for visualization and further processing. A scaling factor (ir_mono8_scaling_factor) is applied. -->
+  <arg name="ir_mono8_scaling_factor"           default="1.0" />            <!-- Scaling factor to apply when converting IR to mono8 (see rescale_ir_to_mono8). If using illumination, use the value 0.5-1. If using passive IR, use 10. -->
+  <arg name="imu_rate_target"                   default="0"/>               <!-- Desired output rate of IMU messages. Set to 0 (default) for full rate (1.6 kHz). -->
+  <arg name="wired_sync_mode"                   default="0"/>               <!-- Wired sync mode. 0: OFF, 1: MASTER, 2: SUBORDINATE. -->
+  <arg name="subordinate_delay_off_master_usec" default="0"/>               <!-- Delay subordinate camera off master camera by specified amount in usec. -->
+
+  <node unless="$(arg sim)" pkg="azure_kinect_ros_driver" type="node" name="$(arg node_name)" output="screen" respawn="true">
+    <rosparam command="load" file="$(find robot_bringup)/config/sensors/camera/azure_kinect.yaml" subst_value="true"/>
+    <param name ="sensor_sn" type="string" value="$(arg sensor_sn)"/>
+    <!-- Topics remmapping -->
+    <remap from="depth/camera_info" to="~depth/camera_info"/>
+    <remap from="depth/image_raw" to="~depth/image_raw"/>
+    <remap from="depth/image_raw/compressed" to="~depth/image_raw/compressed"/>
+    <remap from="depth/image_raw/compressed/parameter_descriptions" to="~depth/image_raw/compressed/parameter_descriptions"/>
+    <remap from="depth/image_raw/compressed/parameter_updates" to="~depth/image_raw/compressed/parameter_updates"/>
+    <remap from="depth/image_raw/compressedDepth" to="~depth/image_raw/compressedDepth"/>
+    <remap from="depth/image_raw/compressedDepth/parameter_descriptions" to="~depth/image_raw/compressedDepth/parameter_descriptions"/>
+    <remap from="depth/image_raw/compressedDepth/parameter_updates" to="~depth/image_raw/compressedDepth/parameter_updates"/>
+    <remap from="depth/image_raw/theora" to="~depth/image_raw/theora"/>
+    <remap from="depth/image_raw/theora/parameter_descriptions" to="~depth/image_raw/theora/parameter_descriptions"/>
+    <remap from="depth/image_raw/theora/parameter_updates" to="~depth/image_raw/theora/parameter_updates"/>
+    <remap from="depth_to_rgb/camera_info" to="~depth_to_rgb/camera_info"/>
+    <remap from="depth_to_rgb/image_raw" to="~depth_to_rgb/image_raw"/>
+    <remap from="depth_to_rgb/image_raw/compressed" to="~depth_to_rgb/image_raw/compressed"/>
+    <remap from="depth_to_rgb/image_raw/compressed/parameter_descriptions" to="~depth_to_rgb/image_raw/compressed/parameter_descriptions"/>
+    <remap from="depth_to_rgb/image_raw/compressed/parameter_updates" to="~depth_to_rgb/image_raw/compressed/parameter_updates"/>
+    <remap from="depth_to_rgb/image_raw/compressedDepth" to="~depth_to_rgb/image_raw/compressedDepth"/>
+    <remap from="depth_to_rgb/image_raw/compressedDepth/parameter_descriptions" to="~depth_to_rgb/image_raw/compressedDepth/parameter_descriptions"/>
+    <remap from="depth_to_rgb/image_raw/compressedDepth/parameter_updates" to="~depth_to_rgb/image_raw/compressedDepth/parameter_updates"/>
+    <remap from="depth_to_rgb/image_raw/theora" to="~depth_to_rgb/image_raw/theora"/>
+    <remap from="depth_to_rgb/image_raw/theora/parameter_descriptions" to="~depth_to_rgb/image_raw/theora/parameter_descriptions"/>
+    <remap from="depth_to_rgb/image_raw/theora/parameter_updates" to="~depth_to_rgb/image_raw/theora/parameter_updates"/>
+    <remap from="imu" to="~imu"/>
+    <remap from="ir/camera_info" to="~ir/camera_info"/>
+    <remap from="ir/image_raw" to="~ir/image_raw"/>
+    <remap from="ir/image_raw/compressed" to="~ir/image_raw/compressed"/>
+    <remap from="ir/image_raw/compressed/parameter_descriptions" to="~ir/image_raw/compressed/parameter_descriptions"/>
+    <remap from="ir/image_raw/compressed/parameter_updates" to="~ir/image_raw/compressed/parameter_updates"/>
+    <remap from="ir/image_raw/compressedDepth" to="~ir/image_raw/compressedDepth"/>
+    <remap from="ir/image_raw/compressedDepth/parameter_descriptions" to="~ir/image_raw/compressedDepth/parameter_descriptions"/>
+    <remap from="ir/image_raw/compressedDepth/parameter_updates" to="~ir/image_raw/compressedDepth/parameter_updates"/>
+    <remap from="ir/image_raw/theora" to="~ir/image_raw/theora"/>
+    <remap from="ir/image_raw/theora/parameter_descriptions" to="~ir/image_raw/theora/parameter_descriptions"/>
+    <remap from="ir/image_raw/theora/parameter_updates" to="~ir/image_raw/theora/parameter_updates"/>
+    <remap from="points2" to="~points2"/>
+    <remap from="rgb/camera_info" to="~rgb/camera_info"/>
+    <remap from="rgb/image_raw" to="~rgb/image_raw"/>
+    <remap from="rgb/image_raw/compressed" to="~rgb/image_raw/compressed"/>
+    <remap from="rgb/image_raw/compressed/parameter_descriptions" to="~rgb/image_raw/compressed/parameter_descriptions"/>
+    <remap from="rgb/image_raw/compressed/parameter_updates" to="~rgb/image_raw/compressed/parameter_updates"/>
+    <remap from="rgb/image_raw/compressedDepth" to="~rgb/image_raw/compressedDepth"/>
+    <remap from="rgb/image_raw/compressedDepth/parameter_descriptions" to="~rgb/image_raw/compressedDepth/parameter_descriptions"/>
+    <remap from="rgb/image_raw/compressedDepth/parameter_updates" to="~rgb/image_raw/compressedDepth/parameter_updates"/>
+    <remap from="rgb/image_raw/theora" to="~rgb/image_raw/theora"/>
+    <remap from="rgb/image_raw/theora/parameter_descriptions" to="~rgb/image_raw/theora/parameter_descriptions"/>
+    <remap from="rgb/image_raw/theora/parameter_updates" to="~rgb/image_raw/theora/parameter_updates"/>
+    <remap from="rgb_to_depth/camera_info" to="~rgb_to_depth/camera_info"/>
+    <remap from="rgb_to_depth/image_raw" to="~rgb_to_depth/image_raw"/>
+    <remap from="rgb_to_depth/image_raw/compressed" to="~rgb_to_depth/image_raw/compressed"/>
+    <remap from="rgb_to_depth/image_raw/compressed/parameter_descriptions" to="~rgb_to_depth/image_raw/compressed/parameter_descriptions"/>
+    <remap from="rgb_to_depth/image_raw/compressed/parameter_updates" to="~rgb_to_depth/image_raw/compressed/parameter_updates"/>
+    <remap from="rgb_to_depth/image_raw/compressedDepth" to="~rgb_to_depth/image_raw/compressedDepth"/>
+    <remap from="rgb_to_depth/image_raw/compressedDepth/parameter_descriptions" to="~rgb_to_depth/image_raw/compressedDepth/parameter_descriptions"/>
+    <remap from="rgb_to_depth/image_raw/compressedDepth/parameter_updates" to="~rgb_to_depth/image_raw/compressedDepth/parameter_updates"/>
+    <remap from="rgb_to_depth/image_raw/theora" to="~rgb_to_depth/image_raw/theora"/>
+    <remap from="rgb_to_depth/image_raw/theora/parameter_descriptions" to="~rgb_to_depth/image_raw/theora/parameter_descriptions"/>
+    <remap from="rgb_to_depth/image_raw/theora/parameter_updates" to="~rgb_to_depth/image_raw/theora/parameter_updates"/>
+
+    <!-- Services remapping-->
+    <remap from="depth/image_raw/compressed/set_parameters" to="~depth/image_raw/compressed/set_parameters"/>
+    <remap from="depth/image_raw/compressedDepth/set_parameters" to="~depth/image_raw/compressedDepth/set_parameters"/>
+    <remap from="depth/image_raw/theora/set_parameters" to="~depth/image_raw/theora/set_parameters"/>
+    <remap from="depth_to_rgb/image_raw/compressed/set_parameters" to="~depth_to_rgb/image_raw/compressed/set_parameters"/>
+    <remap from="depth_to_rgb/image_raw/compressedDepth/set_parameters" to="~depth_to_rgb/image_raw/compressedDepth/set_parameters"/>
+    <remap from="depth_to_rgb/image_raw/theora/set_parameters" to="~depth_to_rgb/image_raw/theora/set_parameters"/>
+    <remap from="ir/image_raw/compressed/set_parameters" to="~ir/image_raw/compressed/set_parameters"/>
+    <remap from="ir/image_raw/compressedDepth/set_parameters" to="~ir/image_raw/compressedDepth/set_parameters"/>
+    <remap from="ir/image_raw/theora/set_parameters" to="~ir/image_raw/theora/set_parameters"/>
+    <remap from="ir/set_camera_info" to="~ir/set_camera_info"/>
+    <remap from="rgb/image_raw/compressed/set_parameters" to="~rgb/image_raw/compressed/set_parameters"/>
+    <remap from="rgb/image_raw/compressedDepth/set_parameters" to="~rgb/image_raw/compressedDepth/set_parameters"/>
+    <remap from="rgb/image_raw/theora/set_parameters" to="~rgb/image_raw/theora/set_parameters"/>
+    <remap from="rgb/set_camera_info" to="~rgb/set_camera_info"/>
+    <remap from="rgb_to_depth/image_raw/compressed/set_parameters" to="~rgb_to_depth/image_raw/compressed/set_parameters"/>
+    <remap from="rgb_to_depth/image_raw/compressedDepth/set_parameters" to="~rgb_to_depth/image_raw/compressedDepth/set_parameters"/>
+    <remap from="rgb_to_depth/image_raw/theora/set_parameters" to="~rgb_to_depth/image_raw/theora/set_parameters"/>
+    <remap from="get_loggers" to="~get_loggers"/>
+    <remap from="set_logger_level" to="~set_logger_level"/>
+  </node>
+
+</launch>

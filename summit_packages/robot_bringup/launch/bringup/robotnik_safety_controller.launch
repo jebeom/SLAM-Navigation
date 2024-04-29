@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+	<arg name="node_name" default="safety_controller" />
+	<!-- robot footprint -->
+	<arg name="base_frame" default="robot_base_footprint" />
+	
+	<arg name="safety_controller_config" default=""/>
+
+	<node pkg="robotnik_safety_controller" type="robotnik_safety_controller_node" name="$(arg node_name)">
+		<!-- robot footprint -->
+		<param name="base_frame" value="$(arg base_frame)" />
+		<rosparam command="load" file="$(arg safety_controller_config)"/>
+	</node>
+
+</launch>

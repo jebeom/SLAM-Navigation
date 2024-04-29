@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+<robot name="rbeken" xmlns:xacro="http://www.ros.org/wiki/xacro"> 
+
+
+    <!-- ***************** -->
+    <!-- Imported elements -->
+    <!-- ***************** -->
+    
+    <!-- First we import all posible elements defined in the urdf.xacro files. All these elements are defined as macro:xacros -->
+
+    <!-- Import RB-Eken base elements -->
+    <xacro:include filename="$(find rbeken_description)/urdf/bases/rbeken_base.urdf.xacro" />
+
+    <!-- Import RB-Eken structures-->
+    <xacro:include filename="$(find rbeken_description)/urdf/structures/rbeken_gps_support.urdf.xacro" />
+    
+    <!-- Import RB-Eken wheels -->
+    <xacro:include filename="$(find rbeken_description)/urdf/wheels/rubber_wheel.urdf.xacro" />
+    <xacro:include filename="$(find rbeken_description)/urdf/structures/rbeken_laser_support.urdf.xacro" />
+    
+    <!-- Import all available sensors -->
+    <xacro:include filename="$(find robotnik_sensors)/urdf/all_sensors.urdf.xacro" />
+  
+    <xacro:property name="PI" value="3.1415926535897931"/>
+
+    <!-- Include UR-10 ARM -->
+    <!--xacro:include filename="$(find ur_description)/urdf/ur10.urdf.xacro" /-->  
+    <xacro:include filename="$(find ur_description)/urdf/inc/ur10e_macro.xacro" />
+
+    <!-- Include gripper description -->
+    <xacro:include filename="$(find rg2_gripper_description)/urdf/rg2_gripper.urdf.xacro" />
+    
+    
+    <!-- Wheel parameters -->
+    
+    
+    <xacro:property name="wheel_offset_x" value="0.26" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
+    <xacro:property name="wheel_offset_y" value="0.3425" />    
+    <xacro:property name="wheel_offset_z" value="0.0" />
+
+    <xacro:property name="front_laser_offset_x" value="0.490"/>   
+    <xacro:property name="front_laser_offset_y" value="-0.300"/>    
+    <xacro:property name="front_laser_offset_z" value="0.3513"/>
+    <xacro:property name="front_laser_offset_roll" value="${PI}"/>
+    <xacro:property name="front_laser_offset_pitch" value="0.0"/>
+    <xacro:property name="front_laser_offset_yaw" value="${-PI/4}"/>
+    
+    <xacro:property name="rear_laser_offset_x" value="-0.490"/>   
+    <xacro:property name="rear_laser_offset_y" value="0.300"/>    
+    <xacro:property name="rear_laser_offset_z" value="0.3513"/>
+    <xacro:property name="rear_laser_offset_roll" value="${PI}"/>
+    <xacro:property name="rear_laser_offset_yaw" value="${3*PI/4}"/>
+    
+    <xacro:property name="front_laser_support_offset_x" value="0.345"/>   
+    <xacro:property name="front_laser_support_offset_y" value="-0.300"/>    
+    <xacro:property name="front_laser_support_offset_z" value="0.4935"/>
+    <xacro:property name="front_laser_support_offset_yaw" value="0"/>
+    
+    <xacro:property name="rear_laser_support_offset_x" value="-0.345"/>   
+    <xacro:property name="rear_laser_support_offset_y" value="0.300"/>    
+    <xacro:property name="rear_laser_support_offset_z" value="0.4935"/>
+    <xacro:property name="rear_laser_support_offset_yaw" value="${PI}"/>
+    
+    <xacro:property name="front_ptz_camera_offset_x" value="0.41625"/>   
+    <xacro:property name="front_ptz_camera_offset_y" value="0.0"/>    
+    <xacro:property name="front_ptz_camera_offset_z" value="0.5043"/>
+    <xacro:property name="front_ptz_camera_offset_roll" value="${PI}"/>
+    <xacro:property name="front_ptz_camera_offset_pitch" value="-0.6435029"/>
+    <xacro:property name="front_ptz_camera_offset_yaw" value="0.0"/>
+    
+   <!--xacro:property name="rear_ptz_camera_offset_x" value="-0.308"/>   
+    <xacro:property name="rear_ptz_camera_offset_y" value="-0.141"/>    
+    <xacro:property name="rear_ptz_camera_offset_z" value="0.195"/-->
+    
+    <xacro:property name="imu_offset_x" value="-0.384"/>   
+    <xacro:property name="imu_offset_y" value="0.0"/>    
+    <xacro:property name="imu_offset_z" value="0.4055"/>
+    
+    <!--xacro:property name="front_rgbd_camera_offset_x" value="0.324"/>   
+    <xacro:property name="front_rgbd_camera_offset_y" value="0.012"/>    
+    <xacro:property name="front_rgbd_camera_offset_z" value="0.230"/-->
+
+    <xacro:property name="gps_offset_x" value="-0.540"/>   
+    <xacro:property name="gps_offset_y" value="0.0"/>    
+    <xacro:property name="gps_offset_z" value="0.898"/>
+
+    <xacro:property name="arm_position_x" value="0.233"/>
+    <xacro:property name="arm_position_y" value="0"/>
+    <xacro:property name="arm_position_z" value="0.59250"/>
+    <xacro:property name="arm_orientation_r" value="0"/>
+    <xacro:property name="arm_orientation_p" value="0"/>
+    <xacro:property name="arm_orientation_y" value="0"/>
+      
+     <!-- Flag to select the high or low quality model -->
+    <xacro:property name="hq" value="true" />
+
+    <xacro:arg name="prefix" default="rbeken_"/>
+    <xacro:arg name="ros_planar_move_plugin" default="false"/>
+
+    <xacro:arg name="load_kinematics_file" default="false"/>
+
+    <xacro:arg name="use_gpu_for_simulation" default="false" />
+    <xacro:property name="gpu" value="$(arg use_gpu_for_simulation)" />
+
+     
+    <xacro:macro name="rbeken" params="prefix publish_bf hq load_kinematics_file">
+
+        <!-- *************** -->
+        <!-- Robots Elements -->
+        <!-- *************** -->
+
+        <!-- Here we create the robot elements using the xacro:macros imported at the beggining of this file -->
+
+        <!-- RB-Eken base -->
+        <xacro:rbeken_base prefix="$(arg prefix)" publish_bf="true" hq="${hq}" />
+
+        <xacro:rubber_wheel prefix="$(arg prefix)front_right" parent="$(arg prefix)base_link" reflect="false" hq="${hq}">
+            <origin xyz="${wheel_offset_x} -${wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0"/>
+        </xacro:rubber_wheel>
+      
+        <xacro:rubber_wheel prefix="$(arg prefix)front_left" parent="$(arg prefix)base_link" reflect="true" hq="${hq}">
+            <origin xyz="${wheel_offset_x} ${wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0"/>
+        </xacro:rubber_wheel>
+      
+        <xacro:rubber_wheel prefix="$(arg prefix)back_left" parent="$(arg prefix)base_link" reflect="true" hq="${hq}">
+            <origin xyz="-${wheel_offset_x} ${wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0"/>
+        </xacro:rubber_wheel>
+      
+        <xacro:rubber_wheel prefix="$(arg prefix)back_right" parent="$(arg prefix)base_link" reflect="false" hq="${hq}">
+            <origin xyz="-${wheel_offset_x} -${wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0"/>
+        </xacro:rubber_wheel>
+
+        <!-- IMU -->
+        <xacro:sensor_imu_hector prefix="$(arg prefix)imu" parent="$(arg prefix)base_link">
+            <origin xyz="${imu_offset_x} ${imu_offset_y} ${imu_offset_z}" rpy="0 0 0"/>
+        </xacro:sensor_imu_hector>
+        
+        <!-- Structures -->
+        <!--xacro:laser_support prefix="$(arg prefix)front_laser_structure" parent="$(arg prefix)base_link">
+            <origin xyz="${front_laser_support_offset_x} ${front_laser_support_offset_y} ${front_laser_support_offset_z}" rpy="0 0 ${front_laser_support_offset_yaw}" />
+        </xacro:laser_support-->
+        <!--xacro:laser_support prefix="$(arg prefix)rear_laser_structure" parent="$(arg prefix)base_link">
+            <origin xyz="${rear_laser_support_offset_x} ${rear_laser_support_offset_y} ${rear_laser_support_offset_z}" rpy="0 0 ${rear_laser_support_offset_yaw}" />
+        </xacro:laser_support-->
+    
+        <!-- SENSORS -->
+
+        <!-- Front left laser -->
+        <xacro:sensor_hokuyo_utm30lx prefix="$(arg prefix)front_left_laser" parent="$(arg prefix)base_link" prefix_topic="front_laser" gpu="${gpu}">
+            <origin xyz="0.58 0.3 0.48" rpy="${PI} 0 ${PI/4}"/>
+        </xacro:sensor_hokuyo_utm30lx>
+
+        <!-- Front right laser -->
+        <xacro:sensor_hokuyo_utm30lx prefix="$(arg prefix)front_right_laser" parent="$(arg prefix)base_link" prefix_topic="rear_laser" gpu="${gpu}">
+            <origin xyz="0.58 -0.3 0.48" rpy="${PI} 0 -${PI/4}"/>
+        </xacro:sensor_hokuyo_utm30lx>
+        
+        <!-- 3D lidar -->
+        <xacro:sensor_rs_bpearl prefix="${prefix}front_3d_laser" parent="$(arg prefix)base_link" prefix_topic="front_3d_laser" range_min="0.1" range_max="90" hfov="360" samples="1200" vfov="90.0" lasers="32" fps="15" gpu="${gpu}">
+            <origin xyz="1 0 1" rpy="0 0 0"/>
+        </xacro:sensor_rs_bpearl>
+
+        <!-- Zed camera -->
+        <xacro:sensor_zed prefix="${prefix}front_rgbd_camera" parent="${prefix}base_link" model="zed2">
+            <origin xyz="1 0 0.5" rpy="0 0 0"/>
+        </xacro:sensor_zed>  
+
+        <!-- GPS -->
+        <!--xacro:rbeken_gps_support prefix="$(arg prefix)gps_support" parent="$(arg prefix)base_link">
+            <origin xyz="${gps_offset_x} ${gps_offset_y} ${gps_offset_z}"/>
+        </xacro:rbeken_gps_support-->
+        <!--xacro:sensor_gps prefix="$(arg prefix)gps" parent="$(arg prefix)base_link">
+            <origin xyz="${gps_offset_x} ${gps_offset_y} ${gps_offset_z}"/>
+        </xacro:sensor_gps-->
+
+
+        <!-- UR-10e ARM 
+        <xacro:ur10e_robot prefix="$(arg prefix)arm_">
+        </xacro:ur10e_robot>
+
+        <joint name="$(arg prefix)arm_base_joint" type="fixed">
+            <origin xyz="${arm_position_x} ${arm_position_y} ${arm_position_z}" rpy="${arm_orientation_r} ${arm_orientation_p} ${arm_orientation_y}"/>
+            <parent link="$(arg prefix)base_link" />
+            <child link="$(arg prefix)arm_base_link" />
+        </joint>
+        -->
+        <!-- OnRobot RG6 gripper
+        <xacro:rg2_gripper prefix="$(arg prefix)rg2_gripper" parent="$(arg prefix)arm_tool0">
+            <origin xyz="0.0 0.0 0.0" rpy="0 -${pi/2} 0"/>
+        </xacro:rg2_gripper>
+        -->
+        
+    </xacro:macro>
+    
+    
+    <xacro:ros_control/>
+    
+    <xacro:if value="$(arg ros_planar_move_plugin)">
+        <xacro:skid_steering_plannar prefix="$(arg prefix)" publish_tf="true"/>
+    </xacro:if>
+
+   
+   <xacro:rbeken prefix="$(arg prefix)" publish_bf="true" hq="true" load_kinematics_file="$(arg load_kinematics_file)"/>
+    
+    
+</robot>
+
+
+
+   
+
+
+

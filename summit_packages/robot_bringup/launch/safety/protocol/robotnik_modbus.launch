@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="device_manufacturer" default="$(optenv ROBOT_SAFETY_DEVICE_MANUFACTURER flexisoft)"/>
+  <arg name="device_model" default="$(optenv ROBOT_SAFETY_DEVICE_MODEL none)"/>
+  <arg name="ip_address" default="$(optenv ROBOT_SAFETY_DEVICE_IP 192.168.0.250)"/>
+
+  <!-- start modbus_io node -->
+  <node pkg="robotnik_modbus_io" type="robotnik_modbus_io_node" name="robotnik_modbus_io" output="screen">
+    <rosparam file="$(find robot_bringup)/config/safety/modbus/$(arg device_manufacturer)/robotnik_modbus_io.yaml" command="load" subst_value="true"/>
+  </node>
+</launch>

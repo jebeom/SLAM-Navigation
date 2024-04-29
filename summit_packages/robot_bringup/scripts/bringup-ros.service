@@ -1,0 +1,10 @@
+[Unit]
+Description=Launches all ROS stuff through screen
+Requires=dbus.socket
+
+[Service]
+RemainAfterExit=true
+ExecStart=/home/robot/bringup.sh
+
+[Install]
+WantedBy=default.target

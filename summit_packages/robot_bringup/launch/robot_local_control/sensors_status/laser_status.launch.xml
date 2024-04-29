@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name="laser_model" default="$(optenv ROBOT_LASER_1_MODEL orbbec)"/>
+    <arg name="laser_id" default=""/>
+
+    <arg name="topic" default="$(arg laser_id)/scan"/>    
+    
+    <rosparam command="load" file="$(find robot_bringup)/config/robot_local_control/sensors_status/laser.yaml" subst_value="true"/>
+</launch>

@@ -1,0 +1,17 @@
+robot_x_size: 0.978
+robot_y_size: 0.776
+
+warning_max_x: 0.6
+warning_min_x: -0.62
+warning_max_y: 0.50
+warning_min_y: -0.50
+warning_max_linear_speed_x: 0.05
+warning_max_angular_speed: 0.1
+
+max_x: 0.58
+min_x: -0.62   
+max_y: 0.45
+min_y: -0.45
+
+cmd_vel_in: safety_controller_docker/cmd_vel
+cmd_vel_out: docker/cmd_vel

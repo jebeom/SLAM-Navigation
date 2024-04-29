@@ -1,0 +1,17 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "catkin",
+            "args": [
+                "build"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "silent"
+            }
+        }
+    ]
+}

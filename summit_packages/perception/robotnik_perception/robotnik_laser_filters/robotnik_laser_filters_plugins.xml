@@ -1,0 +1,11 @@
+<class_libraries>
+  <library path="lib/librobotnik_laser_filters">
+
+    <class name="robotnik_laser_filters/LinearInterpolationLaserScanIntensityFilter" type="robotnik_laser_filters::LinearInterpolationLaserScanIntensityFilter" 
+      base_class_type="filters::FilterBase<sensor_msgs::LaserScan>">
+      <description>
+        This is a filter which filters sensor_msgs::LaserScan messages based on intensity. Interpolates from 0 to 100 the current intensity values and filters out all those lower than the configured percentage.
+      </description>
+    </class>
+  </library>
+</class_libraries>

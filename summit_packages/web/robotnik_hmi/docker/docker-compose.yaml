@@ -1,0 +1,89 @@
+---
+version: '3.7'
+services:
+  webserver:
+    image: nginx:1.21.1-alpine
+    environment:
+      NGINX_PORT: 80
+      NGINX_SERVER: localhost
+      WEBSITE_PATH: "/var/www/html/robotnik_hmi/web/robotnik_hmi/web/"
+      PHP_SERVER: phpserver
+      PHP_PORT: 9000
+      DB_HOST: database
+      DB_PORT: 3306
+    volumes:
+      - type: bind
+        source: ./nginx-template.conf
+        target: /etc/nginx/templates/default.conf.template
+      # Load robot packages as volume
+      - type: bind
+        source: ../../../
+        target: /var/www/html/robotnik_hmi
+      # Load project_description as volume
+      # - type: bind
+      #   source: ${HOME}/project_ws/src/project_description
+      #   target: /var/www/html/robotnik_hmi/web/robotnik_hmi/web/robotnik_hmi/project_description
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+    restart: always
+
+  # PHP server
+  phpserver:
+    build:
+      context: .
+      dockerfile: Dockerfile.phpserver
+    env_file:
+      - ${HOME}/robot_params/hmi_params.env
+    environment:
+      DB_HOST: database
+      DB_PORT: 3306
+      DB_DATABASE: db_robotnik
+      DB_USERNAME: database_user
+      DB_PASS: "databaseuserpassword"
+    volumes:
+      - type: bind
+        source: ./nginx-template.conf
+        target: /etc/nginx/templates/default.conf.template
+      - type: bind
+        source: ../../../
+        target: /var/www/html/robotnik_hmi
+    restart: always
+
+  # Database
+  database:
+    image: mariadb:10.6.3-focal
+    environment:
+      MYSQL_ROOT_PASSWORD: supersecretpassword
+    volumes:
+      - type: volume
+        source: database-volume
+        target: /var/lib/mysql
+    restart: always
+
+  # Database initialization
+  dbinit:
+    image: mariadb:10.6.3-focal
+    environment:
+      DB_ROOT_PASSWORD: supersecretpassword
+      DATABASE_HOSTNAME: database
+      DB_DATABASE: db_robotnik
+      DB_USERNAME: database_user
+      DB_PASS: "databaseuserpassword"
+      WEB_MASTER_USR: root
+      WEB_MASTER_PASS: R0b0tn1K
+      WEB_MASTER_NAME: Robotnik
+    depends_on:
+      - database
+    volumes:
+      - type: bind
+        source: ../web/bbdd
+        target: /sql-data
+      - type: bind
+        source: ./dbinit.sh
+        target: /dbinit.sh
+    command: "/dbinit.sh"
+volumes:
+  database-volume:

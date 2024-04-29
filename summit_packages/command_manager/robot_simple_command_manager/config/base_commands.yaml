@@ -1,0 +1,91 @@
+# Commands that can be performed by any robot
+base_command_list:
+# Actions
+  - GOTO
+  - MOVE
+  - TURN
+  - DOCK
+  - WAIT
+# Services
+  - SET_DRIVER_DO
+# Procedures
+  - RLC_GOTO
+  - RLC_MOVE
+  - RLC_TURN
+  - RLC_CHARGE
+  - RLC_UNCHARGE
+  - GOTO_TAG
+# Subscribers
+  - WAIT_EMERGENCY_STOP
+  - WAIT_DRIVER_DI
+  - WAIT_DRIVER_DO
+
+# ACTIONS
+GOTO:
+  type: move_base_action_interface/MoveBaseActionInterface
+  namespace: move_base
+  frame_id: $(arg fixed_frame)
+  communication_timeout: 10
+
+MOVE:
+  type: move_action_interface/MoveActionInterface
+  namespace: move
+  communication_timeout: 10
+
+TURN:
+  type: move_action_interface/TurnActionInterface
+  namespace: move
+  communication_timeout: 10
+
+DOCK:
+  type: dock_action_interface/DockActionInterface
+  namespace: diff_docker
+  communication_timeout: 10
+
+WAIT:
+  type: wait_action_interface/WaitActionInterface
+  namespace: any
+
+# SERVICES
+SET_DRIVER_DO:
+  type: set_digital_output_service_interface/SetDigitalOutputServiceInterface
+  namespace: robotnik_base_hw/set_digital_output
+
+# PROCEDURES
+RLC_GOTO:
+  type: goto_procedure_interface/GoToProcedureInterface
+  namespace: GoToComponent
+  frame_id: robot_map
+
+RLC_MOVE:
+  type: move_linear_procedure_interface/MoveLinearProcedureInterface
+  namespace: MoveComponent
+
+RLC_TURN:
+  type: move_angular_procedure_interface/MoveAngularProcedureInterface
+  namespace: MoveComponent
+
+RLC_CHARGE:
+  type: charge_procedure_interface/ChargeProcedureInterface
+  namespace: ChargeComponent
+
+RLC_UNCHARGE:
+  type: uncharge_procedure_interface/UnchargeProcedureInterface
+  namespace: UnchargeComponent
+
+GOTO_TAG:
+  type: goto_tag_procedure_interface/GoToTagProcedureInterface
+  namespace: GoToComponent
+
+# SUBSCRIBERS
+WAIT_EMERGENCY_STOP:
+  type: bool_subscriber_interface/BoolSubscriberInterface
+  namespace: robotnik_base_hw/emergency_stop
+
+WAIT_DRIVER_DI:
+  type: wait_di_subscriber_interface/WaitDISubscriberInterface
+  namespace: robotnik_base_hw/io
+
+WAIT_DRIVER_DO:
+  type: wait_do_subscriber_interface/WaitDOSubscriberInterface
+  namespace: robotnik_base_hw/io

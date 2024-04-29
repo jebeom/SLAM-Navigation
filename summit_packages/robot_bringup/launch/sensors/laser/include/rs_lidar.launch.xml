@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+
+<launch>
+	<arg name="sim" default="$(optenv ROBOT_RUN_SIMULATION false)"/>
+
+  <arg name="id_robot" default="$(optenv ROBOT_ID robot)"/>
+  <arg name="prefix" default="$(arg id_robot)_" />
+  <arg name="node_name" default="rslidar" />  
+  <arg name="scan_topic" default="points" />  
+  <arg name="frame_id" default="rslidar" />  
+  <arg name="model" default="RS16" />
+  <arg name="ip_address" default="192.168.1.10" />
+  <arg name="msop_port" default="6699" />
+  <arg name="difop_port" default="7788" />
+  <arg name="lidar_param_path" default="$(find rslidar_pointcloud)/data/rs_lidar_16/"/>
+
+  <group ns="$(arg node_name)">
+    <node unless="$(arg sim)" name="driver" pkg="rslidar_driver" type="rslidar_node" output="screen" >
+      <param name="frame_id" value="$(arg frame_id)"/>
+      <param name="model" value="$(arg model)"/>
+      <param name="device_ip" value="$(arg ip_address)" />
+      <param name="msop_port" value="$(arg msop_port)" />
+      <param name="difop_port" value="$(arg difop_port)"/>
+      <!--param name="pcap" value="path_to_pcap"/-->
+    </node>
+
+    <node unless="$(arg sim)" name="cloud" pkg="rslidar_pointcloud" type="rscloud_node" output="screen" >
+      <remap from="rslidar_points" to="$(arg scan_topic)"/>
+      <param name="model" value="$(arg model)"/>
+      <param name="curves_path" value="$(arg lidar_param_path)/curves.csv" />
+      <param name="angle_path" value="$(arg lidar_param_path)/angle.csv" />
+      <param name="channel_path" value="$(arg lidar_param_path)/ChannelNum.csv" />
+    </node>
+
+    <!--node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan">
+
+     <remap from="cloud_in" to="$(arg scan_topic)"/>
+     <remap from="scan" to="scan"/>
+     <param name="target_frame" value="$(arg prefix)base_footprint"/>
+     <rosparam>
+       transform_tolerance: 0.01
+       min_height: 0.1
+       max_height: 1.0
+
+       angle_min: -3.14 # -M_PI/2
+       angle_max: 3.14 # M_PI/2
+       angle_increment: 0.0087 # M_PI/360.0
+       scan_time: 0.3333
+       range_min: 0.45
+       range_max: 50.0
+       use_inf: true
+
+       # Concurrency level, affects number of pointclouds queued for processing and number of threads used
+       # 0 : Detect number of cores
+       # 1 : Single threaded
+       # 2->inf : Parallelism level
+       concurrency_level: 1
+     </rosparam>
+   </node-->
+
+  </group>
+
+</launch>
