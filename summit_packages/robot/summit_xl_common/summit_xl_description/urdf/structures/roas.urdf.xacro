@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="roas">
+
+  <xacro:property name="PI" value="3.1415926535897931"/>
+
+  <xacro:include filename="$(find summit_xl_description)/urdf/structures/d435.urdf.xacro"/>
+  <xacro:include filename="$(find summit_xl_description)/urdf/structures/tim571.urdf.xacro"/>
+  
+  <link name="top_structure">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://summit_xl_description/meshes/structures/top_structure_roas.stl"/>
+      </geometry>
+      <material name="darkgrey">
+        <color rgba="0.211 0.216 0.216 1"/>
+      </material>
+    </visual>
+    
+    <collision>
+      <origin xyz="0 0 0.142" rpy="${PI/2} 0 ${PI/2}"/>
+      <!-- 주석처리 안하면 spawn이 이상하게 됨
+      <geometry>
+        <mesh filename="package://summit_xl_description/meshes/structures/top_structure_roas.stl"/>
+      </geometry>
+      -->
+    </collision>
+  
+  </link>
+
+  <xacro:include filename="$(find franka_description)/robots/fr3/fr3.urdf.xacro"/> <!-- 파일 내부 코드 수정(for simulation)-->
+
+  <joint name="fr3_base_joint" type="fixed">
+    <origin xyz="0.2776 0 0.608" rpy="0 0 0"/>
+    <parent link="top_structure"/>
+    <child link="fr3_link0"/>
+  </joint>
+  
+  <link name="ee_link"/>
+  <joint name="ee_joint" type="fixed">
+    <parent link="fr3_link8" />
+    <child link="ee_link" />
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <!-- D435 -->
+  <xacro:sensor_d435 parent="top_structure" name="camera">
+    <origin xyz="-0.215 0 1.454" rpy="0 0 0"/>
+  </xacro:sensor_d435>
+
+  <!-- Front TIM571-->
+  <xacro:sensor_tim571 parent="top_structure" name="front_laser">
+    <origin xyz="0.435 0.34 0.4535" rpy="3.14 0 0.785"/>
+  </xacro:sensor_tim571>
+  
+    <!-- Rear TIM571-->
+  <xacro:sensor_tim571 parent="top_structure" name="rear_laser">
+    <origin xyz="-0.435 -0.34 0.4535" rpy="3.14 0 3.925"/>
+  </xacro:sensor_tim571>
+</robot>

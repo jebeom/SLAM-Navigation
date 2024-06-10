@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="id_robot" default="$(optenv ROBOT_ID robot)"/>
+  <arg name="ip_address" default="192.168.0.200"/>
+  <arg name="port" default="50000"/>
+
+  <group ns="$(arg id_robot)">
+
+    <!-- COMMAND MANAGER -->
+    <node name="command_manager" pkg="robot_simple_command_manager" type="simple_command_manager_node.py" output="screen">
+      <rosparam command="load" file="$(find robotnik_urcap_bringup)/config/command_manager.yaml" subst_value="true"/>
+    </node>
+
+    <!-- URCAP XMLRPC BRIDGE -->
+    <node pkg="robotnik_urcap_bridge" type="urcap_command_bridge_node.py" name="urcap_command_bridge" output="screen" launch-prefix="bash -c 'sleep 3; $0 $@' ">
+      <rosparam command="load" file="$(find robotnik_urcap_bringup)/config/server.yaml" subst_value="true"/>
+    </node>
+  
+  </group>
+
+</launch>

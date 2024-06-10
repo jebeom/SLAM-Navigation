@@ -1,0 +1,9 @@
+source_list:
+  - topic: /robot/joint_states
+    timeout: 0.0 
+  - topic: /robot/lift/joint_states
+    timeout: 0.0 
+  - topic: /robot/arm/joint_states
+    timeout: 0.0 
+  - topic: /robot/gripper/joint_states
+    timeout: 0.0 

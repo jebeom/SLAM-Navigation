@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="urdf_xacro"  default="summit_xl_gen_std.urdf.xacro"/>  
+  <arg name="prefix" default="robot_"/>
+  
+  <arg name="xacro_path" default="none"/>
+  <arg if="$(eval xacro_path == 'none')" name="path" value="$(find summit_xl_description)/robots/$(arg urdf_xacro)"/>
+  <arg unless="$(eval xacro_path == 'none')" name="path" value="$(arg xacro_path)"/>
+  
+  <!-- Load the URDF into ROS parameter server -->
+  <arg name="urdf_file" default="$(find xacro)/xacro '$(arg path)' prefix:=$(arg prefix) --inorder" />
+  <param name="robot_description" command="$(arg urdf_file)" />
+</launch>

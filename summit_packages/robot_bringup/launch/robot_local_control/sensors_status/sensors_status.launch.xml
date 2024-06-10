@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+
+<!-- This launch is intended to bringup all the cameras of the system -->
+<launch>
+
+  <arg name="id_robot" default="$(optenv ROBOT_ID robot)"/>
+  <arg name="prefix" default="$(arg id_robot)_"/>
+
+  <!-- 1 LASER -->
+  <arg name="laser_1_model" default="$(optenv ROBOT_LASER_1_MODEL none)"/>
+  <arg name="laser_1_id" default="$(optenv ROBOT_LASER_1_ID laser_1)"/>
+
+  <!-- 2 LASER -->
+  <arg name="laser_2_model" default="$(optenv ROBOT_LASER_2_MODEL none)"/>
+  <arg name="laser_2_id" default="$(optenv ROBOT_LASER_2_ID laser_2)"/>
+
+  <!-- 3 LASER -->
+  <arg name="laser_3_model" default="$(optenv ROBOT_LASER_3_MODEL none)"/>
+  <arg name="laser_3_id" default="$(optenv ROBOT_LASER_3_ID laser_3)"/>
+
+  <!-- 4 LASER -->
+  <arg name="laser_4_model" default="$(optenv ROBOT_LASER_4_MODEL none)"/>
+  <arg name="laser_4_id" default="$(optenv ROBOT_LASER_4_ID laser_4)"/>
+
+  <!-- 5 LASER -->
+  <arg name="laser_5_model" default="$(optenv ROBOT_LASER_5_MODEL none)"/>
+  <arg name="laser_5_id" default="$(optenv ROBOT_LASER_5_ID laser_5)"/>
+
+  <!-- 1 LASER -->
+  <include if="$(eval laser_1_model != 'none')" file="$(find robot_bringup)/launch/robot_local_control/sensors_status/laser_status.launch.xml">
+    <arg name="laser_model" value="$(arg laser_1_model)"/>
+    <arg name="laser_id" value="$(arg laser_1_id)"/>
+  </include>
+
+  <!-- 2 LASER -->
+  <include if="$(eval laser_2_model != 'none')" file="$(find robot_bringup)/launch/robot_local_control/sensors_status/laser_status.launch.xml">
+    <arg name="laser_model" value="$(arg laser_2_model)"/>
+    <arg name="laser_id" value="$(arg laser_2_id)"/>
+  </include>
+
+  <!-- 3 LASER -->
+  <include if="$(eval laser_3_model != 'none')" file="$(find robot_bringup)/launch/robot_local_control/sensors_status/laser_status.launch.xml">
+    <arg name="laser_model" value="$(arg laser_3_model)"/>
+    <arg name="laser_id" value="$(arg laser_3_id)"/>
+  </include>
+
+  <!-- 4 LASER -->
+  <include if="$(eval laser_4_model != 'none')" file="$(find robot_bringup)/launch/robot_local_control/sensors_status/laser_status.launch.xml">
+    <arg name="laser_model" value="$(arg laser_4_model)"/>
+    <arg name="laser_id" value="$(arg laser_4_id)"/>
+  </include>
+
+  <!-- 5 LASER -->
+  <include if="$(eval laser_5_model != 'none')" file="$(find robot_bringup)/launch/robot_local_control/sensors_status/laser_status.launch.xml">
+    <arg name="laser_model" value="$(arg laser_5_model)"/>
+    <arg name="laser_id" value="$(arg laser_5_id)"/>
+  </include>
+
+
+  <!-- 1 CAMERA -->
+  <arg name="camera_1_model" default="$(optenv ROBOT_CAMERA_1_MODEL none)"/>
+  <arg name="camera_1_id" default="$(optenv ROBOT_CAMERA_1_ID camera_1)"/>
+
+  <!-- 2 CAMERA -->
+  <arg name="camera_2_model" default="$(optenv ROBOT_CAMERA_2_MODEL none)"/>
+  <arg name="camera_2_id" default="$(optenv ROBOT_CAMERA_2_ID camera_2)"/>
+
+  <!-- 3 CAMERA -->
+  <arg name="camera_3_model" default="$(optenv ROBOT_CAMERA_3_MODEL none)"/>
+  <arg name="camera_3_id" default="$(optenv ROBOT_CAMERA_3_ID camera_3)"/>
+
+  <!-- 4 CAMERA -->
+  <arg name="camera_4_model" default="$(optenv ROBOT_CAMERA_4_MODEL none)"/>
+  <arg name="camera_4_id" default="$(optenv ROBOT_CAMERA_4_ID camera_4)"/>
+
+  <!-- 5 CAMERA -->
+  <arg name="camera_5_model" default="$(optenv ROBOT_CAMERA_5_MODEL none)"/>
+  <arg name="camera_5_id" default="$(optenv ROBOT_CAMERA_5_ID camera_5)"/>
+
+  <!-- 1 CAMERA -->
+  <include if="$(eval camera_1_model != 'none')" file="$(find robot_bringup)/launch/robot_local_control/sensors_status/camera_status.launch.xml">
+    <arg name="camera_model" value="$(arg camera_1_model)"/>
+    <arg name="camera_id" value="$(arg camera_1_id)"/>
+  </include>
+
+  <!-- 2 CAMERA -->
+  <include if="$(eval camera_2_model != 'none')" file="$(find robot_bringup)/launch/robot_local_control/sensors_status/camera_status.launch.xml">
+    <arg name="camera_model" value="$(arg camera_2_model)"/>
+    <arg name="camera_id" value="$(arg camera_2_id)"/>
+  </include>
+
+  <!-- 3 CAMERA -->
+  <include if="$(eval camera_3_model != 'none')" file="$(find robot_bringup)/launch/robot_local_control/sensors_status/camera_status.launch.xml">
+    <arg name="camera_model" value="$(arg camera_3_model)"/>
+    <arg name="camera_id" value="$(arg camera_3_id)"/>
+  </include>
+
+  <!-- 4 CAMERA -->
+  <include if="$(eval camera_4_model != 'none')" file="$(find robot_bringup)/launch/robot_local_control/sensors_status/camera_status.launch.xml">
+    <arg name="camera_model" value="$(arg camera_4_model)"/>
+    <arg name="camera_id" value="$(arg camera_4_id)"/>
+  </include>
+
+  <!-- 5 CAMERA -->
+  <include if="$(eval camera_5_model != 'none')" file="$(find robot_bringup)/launch/robot_local_control/sensors_status/camera_status.launch.xml">
+    <arg name="camera_model" value="$(arg camera_5_model)"/>
+    <arg name="camera_id" value="$(arg camera_5_id)"/>
+  </include>
+
+
+</launch>

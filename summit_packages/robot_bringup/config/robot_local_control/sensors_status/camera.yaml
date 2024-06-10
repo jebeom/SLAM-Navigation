@@ -1,0 +1,5 @@
+sensors:
+  $(arg camera_id):
+    type: robot_local_control_components/CameraComponent
+    desired_freq: 1.0
+    topic: $(arg topic)

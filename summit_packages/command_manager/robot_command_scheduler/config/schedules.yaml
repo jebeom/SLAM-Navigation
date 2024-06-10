@@ -1,0 +1,48 @@
+# Sample of Schedule
+#
+#  Key -> Schedule Identifier
+#  commands -> handler/sequence/mission to execute, depending on action_client_namespace
+#  date_end -> Last date in which the command will be executed. yyyy/mm/dd format
+#  date_start -> First date in which the command will be executed. yyyy/mm/dd format
+#  enabled: Whether to execute the command or not
+#  hour -> Determines the hour to execute the command. hh format
+#  minute -> Determines the minute to execute the command. mm format
+#  repeat_hour -> The command will be triggered each day every X hours. Set 0 to launch it just once per day
+#  wk -> Empty list to launch the mission every weekday. Values from 0 to 6 for each weekday, where 0 is Monday
+#
+# 
+# Launch mission M1 every day at 12:46 
+#
+# 'S1':
+#   commands: M1
+#   date_end: 2030/01/01
+#   date_start: 2020/01/01
+#   enabled: true
+#   hour: 12
+#   minute: 46
+#   repeat_hour: 0
+#   wk: []
+#
+# Launch MY_MISSION every Wednesday and Friday at 08:00, repeat it every 5 hours
+# This mission will be triggered every Wednesday and Friday at 08:00, 13:00, 18:00 and 23:00 until 2025/03/14
+#
+# 'S2':
+#   commands: MY_MISSION
+#   date_end: 2025/03/14
+#   date_start: 2020/01/01
+#   enabled: true
+#   hour: 08
+#   minute: 00
+#   repeat_hour: 5
+#   wk: [2, 4]
+
+'S1':
+  commands: M1
+  date_end: 2030/01/01
+  date_start: 2020/01/01
+  enabled: false
+  hour: 12
+  minute: 46
+  repeat_hour: 0
+  wk: []
+

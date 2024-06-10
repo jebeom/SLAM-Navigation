@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="prefix" default="camera_rtsp_"/>
+    <arg name="ip_address" default="rtsp://127.0.0.1:5050/camera"/>
+    <arg name="calibration" default=""/>
+    <arg name="node_name" default="camer_rtsp"/>
+    <arg name="device_id" default="1"/>
+   <!-- launch video stream -->
+   <include file="$(find robot_bringup)/launch/sensors/camera/camera_std.launch" >
+   		<arg name="device_id" value="$(arg device_id)"/>
+		<!-- node name and ros graph name -->
+	  	<arg name="node_name" value="$(arg node_name)" />
+	  	<!-- url of the video stream -->
+	  	<arg name="ip_address" value="$(arg ip_address)" />
+	  	<!-- set camera fps to (does nothing on a stream)-->
+	  	<!-- <arg name="set_camera_fps" value="30"/> -->
+      	<!-- set buffer queue size of frame capturing to -->
+      	<arg name="buffer_queue_size" value="0" />
+	  	<!-- throttling the querying of frames to -->
+	  	<arg name="fps" value="30" />
+	  	<!-- setting frame_id -->
+	  	<arg name="prefix" value="$(arg prefix)" />
+	  	<!-- camera info loading, take care as it needs the "file:///" at the start , e.g.:
+	  	"file:///$(find your_camera_package)/config/your_camera.yaml" -->
+	  	<arg name="camera_info_url" value="" />
+	  	<!-- flip the image horizontally (mirror it) -->
+	  	<arg name="flip_horizontal" value="false" />
+	  	<!-- flip the image vertically -->
+	  	<arg name="flip_vertical" value="false" />
+	  	<!-- visualize on an image_view window the stream generated -->
+	  	<arg name="visualize" value="false" />
+   </include>
+</launch>

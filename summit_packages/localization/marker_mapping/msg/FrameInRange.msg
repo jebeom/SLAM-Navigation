@@ -1,0 +1,2 @@
+string frame_id
+bool is_being_used

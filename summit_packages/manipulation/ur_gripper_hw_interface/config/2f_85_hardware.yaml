@@ -1,0 +1,9 @@
+# Joint names
+hardware_interface:
+    loop_hz: 50
+    gripper_model: $(arg gripper_model)
+    min_pos: $(arg min_pos) 
+    max_pos: $(arg max_pos)
+    verbose: $(arg verbose)
+    joints:
+      - $(arg prefix)finger_joint

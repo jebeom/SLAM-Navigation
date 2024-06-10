@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name="camera_model" default="$(optenv ROBOT_CAMERA_1_MODEL orbbec)"/>
+    <arg name="camera_id" default=""/>
+
+    <arg if="$(eval camera_model == 'realsense')" name="topic" default="$(arg camera_id)/color/image_raw"/>
+    <arg if="$(eval camera_model == 'orbbec')" name="topic" default="$(arg camera_id)/rgb/image_raw"/>
+    <arg if="$(eval camera_model == 'orbbec_astra_pro')" name="topic" default="$(arg camera_id)/rgb/image_raw"/>
+    <arg if="$(eval camera_model == 'axis_m5525')" name="topic" default="$(arg camera_id)/image_raw"/>
+    <arg if="$(eval camera_model == 'rtsp')" name="topic" default="$(arg camera_id)/image_raw"/>
+    <arg if="$(eval camera_model == 'webcam')" name="topic" default="$(arg camera_id)/image_raw"/>
+    <arg if="$(eval camera_model == 'oak_d_pro_poe')" name="topic" default="$(arg camera_id)/rgb/image_raw"/>
+    
+
+    <rosparam command="load" file="$(find robot_bringup)/config/robot_local_control/sensors_status/camera.yaml" subst_value="true"/>
+</launch>

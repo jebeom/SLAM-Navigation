@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>cartographer_pbstream_creator</name>
+  <version>0.1.0</version>
+  <description>The cartographer_pbstream_creator package, based on RComponent structure. Auxiliar node that offers a service to generate Cartographer pbstream maps. The service returns inmediately without feedback to avoid blocking the caller thread execution</description>
+
+  <maintainer email="avillena@robotnik.es">alvarovillena</maintainer>
+
+  <author email="avillena@robotnik.es">alvarovillena</author>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>rospy</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>std_srvs</build_depend>
+  <build_depend>rcomponent</build_depend>
+  <build_depend>cartographer_ros_msgs</build_depend>
+
+  <build_export_depend>rospy</build_export_depend>
+
+  <exec_depend>rospy</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>std_srvs</exec_depend>
+  <exec_depend>rcomponent</exec_depend>
+  <exec_depend>cartographer_ros_msgs</exec_depend>
+
+  <export>
+
+  </export>
+</package>

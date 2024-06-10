@@ -1,0 +1,47 @@
+robotnik_base_hw:
+  port: /dev/pcan_base
+
+  desired_freq: 50.0
+  # to recover automatically from motordrive state errors
+  auto_recovery: true
+  recovery_period: 30
+
+  calculate_vel_using_pose: false
+  # 24V motors: 12.52, 48V motors: 9.56
+  gearbox_ratio: $(arg gearbox_ratio)
+  joint_encoder_resolution: $(arg joint_encoder_resolution)
+  control_power_consumption: [-1.0, -1.0, -1.0, -1.0]
+
+  joint_name: [$(arg prefix)front_left_wheel_joint,$(arg prefix)back_left_wheel_joint,$(arg prefix)front_right_wheel_joint,$(arg prefix)back_right_wheel_joint]
+  joint_can_id: [1,2,3,4]
+  joint_type: [vel,vel,vel,vel]
+  joint_home_offset: $(arg joint_home_offset)
+  joint_spin: $(arg joint_spin)
+  joint_model: $(arg joint_model)
+
+  # Values to multiply on IO raw data received
+  k_analog_inputs_multipliers: $(arg k_analog_inputs_multipliers)
+  k_battery_voltage_offset: $(arg battery_voltage_offset)
+  joint_inputs_per_driver: $(arg joint_inputs_per_driver)
+  joint_outputs_per_driver: $(arg joint_outputs_per_driver)
+  joint_analog_inputs_per_driver: $(arg joint_analog_inputs_per_driver)
+
+  low_position_limit: $(arg low_position_limit)
+  high_position_limit: $(arg high_position_limit)
+  
+  # Keep motor control when CAN heartbeat is lost
+  apply_drive_status_control: $(arg apply_drive_status_control)
+
+generic_hw_control_loop:
+  loop_hz: 300
+  cycle_time_error_threshold: 0.01
+
+
+
+# Settings for ros_control hardware interface
+hardware_interface:
+  joints:
+     - $(arg prefix)front_right_wheel_joint
+     - $(arg prefix)front_left_wheel_joint
+     - $(arg prefix)back_right_wheel_joint
+     - $(arg prefix)back_left_wheel_joint

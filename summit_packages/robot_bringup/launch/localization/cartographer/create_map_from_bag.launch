@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Generate URDF file: rosrun xacro xacro -o robot.urdf summit.urdf.xacro -->
+  <arg name="urdf_filename" default="$(find robot_bringup)/config/localization/cartographer/robot.urdf"/>
+  <arg name="bag_filenames" default=""/>
+
+  <node name="cartographer_assets_writer" pkg="cartographer_ros" required="false"
+      type="cartographer_assets_writer" args="
+          -configuration_directory $(find robot_bringup)/config/localization/cartographer
+          -configuration_basename create_map_from_bag.lua
+          -urdf_filename $(arg urdf_filename)
+          -pose_graph_filename $(arg pose_graph_filename)
+          -bag_filenames $(arg bag_filenames)"
+      output="screen">
+  </node>
+</launch>

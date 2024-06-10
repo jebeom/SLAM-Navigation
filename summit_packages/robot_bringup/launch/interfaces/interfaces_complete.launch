@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <arg name="id_robot" default="$(optenv ROBOT_ID robot)"/>
+  <arg name="run_urcap" default="$(optenv ROBOT_RUN_URCAP_SERVER false)"/>
+  <arg name="run_rostful" default="$(optenv ROBOT_RUN_ROSTFUL_SERVER false)"/>
+
+  <group ns="$(arg id_robot)">
+
+    <arg name="prefix" value="$(arg id_robot)_"/>
+
+    <!-- URCAP -->
+    <include if="$(arg run_urcap)" file="$(find robot_bringup)/launch/interfaces/urcap/urcap_server.launch"/>
+
+    <!-- ROSTFUL -->
+    <include if="$(arg run_rostful)" file="$(find robot_bringup)/launch/interfaces/rostful/rostful_server.launch"/>
+
+  </group>
+
+
+
+</launch>

@@ -1,0 +1,57 @@
+<!--
+  Copyright 2018 The Cartographer Authors
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<launch>
+  <arg name="bag_filenames" default="home/kist_slam_navi/catkib_ws/downloads/scan_odom_point_imu_record.bag"/> <!-- 수정 -->
+  <arg name="no_rviz" default="false"/>
+  <arg name="rviz_config" default="$(find cartographer_ros)/configuration_files/demo_3d.rviz"/>
+  <arg name="configuration_directory" default="$(find robot_bringup)/config/localization/cartographer"/>
+  <arg name="configuration_basenames" default="slam_3d.lua"/>
+  <arg name="urdf_filenames" default="$(find robot_bringup)/config/localization/cartographer/robot.urdf"/>
+  <arg name="launch_prefix" default=""/>
+
+  <param name="/use_sim_time" value="true" />
+
+  <group unless="$(arg no_rviz)">
+    <node name="rviz"
+          pkg="rviz"
+          type="rviz"
+          required="true"
+          args="-d $(arg rviz_config)" />
+
+    <node name="cartographer_occupancy_grid_node"
+        pkg="cartographer_ros"
+        type="cartographer_occupancy_grid_node"
+        args="-resolution 0.03" />
+  </group>
+
+  <node name="cartographer_offline_node" pkg="cartographer_ros"
+      required="$(arg no_rviz)"
+      type="cartographer_offline_node" args="
+          -configuration_directory $(arg configuration_directory)
+          -configuration_basenames $(arg configuration_basenames)
+          -urdf_filenames $(arg urdf_filenames)
+          -bag_filenames $(arg bag_filenames)
+          -start_trajectory_with_default_topics"
+      launch-prefix="$(arg launch_prefix)"
+      output="screen"/>
+
+  <remap from="scan" to="/scan_multi" />  <!-- default = /robot/scan -->
+  <remap from="points2" to="merged_cloud" /> <!-- /robot/top_3d_laser/points -->
+  <remap from="odom" to="/robot/robotnik_base_control/odom" />
+  <remap from="imu" to="/robot/imu/data" />
+</launch>
+

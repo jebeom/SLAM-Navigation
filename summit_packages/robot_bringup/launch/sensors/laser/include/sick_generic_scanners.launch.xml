@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<launch>
+	<arg name="sim" default="$(optenv ROBOT_RUN_SIMULATION false)"/>
+
+  <arg name="node_name"     default="sick_laser"/>
+  <arg name="scan_topic"    default="~scan"/>
+  <arg name="frame_id"      default="laser_link" />
+  <arg name="scanner_type"   default="sick_lms_5xx"/>
+  <arg name="angle_start"   default="-1.658062789" />
+  <arg name="angle_end"     default="1.658062789" />
+  <arg name="range_max"     default="100"/>
+  <arg name="intensity"     default="true"/>
+  <arg name="ip_address"    default="192.168.0.10"/> 
+  <arg name="port"          default="2112"/>
+  <arg name="timelimit"     default="5"/>
+  <arg name="intensity_resolution_16bit"  default="false"/>
+  <arg name="use_binary_protocol"         default="true"/>
+  
+  <arg name="cloud_topic" default="~cloud"/>
+  <arg name="encoder_topic" default="~encoder"/>
+  <arg name="imu_topic" default="~imu"/>
+
+  <!-- launch file for the lms_5xx series -->
+  <node unless="$(arg sim)" name="$(arg node_name)" pkg="sick_scan" type="sick_generic_caller" respawn="false" output="screen">
+
+      <!-- default values: -->
+      <!--
+        <param name="min_ang" type="double" value="-1.658062789" />
+        <param name="max_ang" type="double" value="1.658062789" />
+        <param name="intensity" type="bool" value="True" />
+        <param name="skip" type="int" value="0" />
+        <param name="frame_id" type="str" value="laser" />
+        <param name="time_offset" type="double" value="-0.001" />
+        <param name="publish_datagram" type="bool" value="False" />
+        <param name="subscribe_datagram" type="bool" value="false" />
+        <param name="device_number" type="int" value="0" />
+        <param name="range_min" type="double" value="0.05" />
+      -->
+      <param name="frame_id" type="string" value="$(arg frame_id)"/>
+      <param name="scanner_type" type="string" value="$(arg scanner_type)"/>
+      
+      <param name="min_ang" type="double" value="$(arg angle_start)"/>
+      <param name="max_ang" type="double" value="$(arg angle_end)"/>
+      <param name="range_min" type="double" value="0"/>
+      <param name="range_max" type="double" value="$(arg range_max)"/>
+      <param name="range_filter_handling" type="int" value="0"/>
+      <param name="intensity" type="bool" value="$(arg intensity)"/>
+      <param name="intensity_resolution_16bit" type="bool" value="$(arg intensity_resolution_16bit)"/>
+      <param name="min_intensity" type="double" value="0.0"/> <!-- Set range of LaserScan messages to infinity, if intensity < min_intensity (default: 0) -->
+      <param name="hostname" type="string" value="$(arg ip_address)"/>
+      <param name="port" type="string" value="$(arg port)"/>
+      <param name="timelimit" type="int" value="$(arg timelimit)"/>
+      <param name="use_binary_protocol" type="bool" value="$(arg use_binary_protocol)"/>
+
+      <remap from="scan" to="$(arg scan_topic)"/>
+      <remap from="encoder" to="$(arg encoder_topic)"/>
+      <remap from="cloud" to="$(arg cloud_topic)"/>
+      <remap from="imu" to="$(arg imu_topic)"/>
+
+      <param name="sw_pll_only_publish" type="bool" value="true"/>
+
+      <param name="start_services" type="bool" value="True" />                  <!-- Start ros service for cola commands, default: true -->
+      <param name="message_monitoring_enabled" type="bool" value="True" />      <!-- Enable message monitoring with reconnect+reinit in case of timeouts, default: true -->
+      <param name="read_timeout_millisec_default" type="int" value="5000"/>     <!-- 5 sec read timeout in operational mode (measurement mode), default: 5000 milliseconds -->
+      <param name="read_timeout_millisec_startup" type="int" value="120000"/>   <!-- 120 sec read timeout during startup (sensor may be starting up, which can take up to 120 sec.), default: 120000 milliseconds -->
+      <param name="read_timeout_millisec_kill_node" type="int" value="150000"/> <!-- 150 sec pointcloud timeout, ros node will be killed if no point cloud published within the last 150 sec., default: 150000 milliseconds -->
+      <param name="client_authorization_pw" type="string" value="F4724744"/>    <!-- Default password for client authorization -->
+
+      <!-- possible angular resolutions are 1,0.6667,0.5,0.3333,0.25,0.1667
+        possible scan frequencies are 25,35,50,75,100 Hz
+        Make sure to check in the manual whether the desired scanning frequency
+        and angular resolution combination is available.
+        The parameters scan_freq and ang_res must always be used together.
+      !-->
+      <!--param name="ang_res" type="double" value="$(arg ang_res)" />
+      <param name="scan_freq" type="double" value="$(arg scan_freq)" /-->
+
+
+  </node>
+  
+</launch>

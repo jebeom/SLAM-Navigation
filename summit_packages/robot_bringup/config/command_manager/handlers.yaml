@@ -1,0 +1,218 @@
+base_command_list:
+#  - GOTO
+  - MOVE
+  - TURN
+#  - DOCK
+#  - RLC_GOTO
+#  - RLC_MOVE
+#  - RLC_TURN
+#  - RLC_CHARGE
+#  - RLC_UNCHARGE
+#  - GOTO_TAG
+  - WAIT
+
+command_list:  
+#  - RLC_PICK
+#  - RLC_PLACE
+#  - RLC_GOTO_GPS
+#  - WAIT_TRIGGER1
+#  - LOCALIZATION_STOP_MODULE
+#  - LOCALIZATION_START_MODULE
+#  - LOCALIZATION_SET_POSE
+#  - SAVE_MAP
+#  - AMCL_SWITCH_ENVIRONMENT
+#  - AMCL_SAVE_FRAME
+#  - PTZ_RGB
+#  - PTZ_TAG_RGB
+
+# ACTIONS
+
+GOTO:
+  type: move_base_action_interface/MoveBaseActionInterface
+  namespace: move_base
+  description: The robot will navigate to a specific coordinates of the map. The robot will avoid obstacles in the trajectory.
+  category: navigation
+  frame_id: $(arg fixed_frame)
+  communication_timeout: 10
+
+MOVE:
+  type: move_action_interface/MoveActionInterface
+  namespace: move
+  description: Defines a displacement from the current position of the robot. Y axis displacements are only available for omni-directional robots. This movement has not obstacle avoidance.
+  category: movement
+  communication_timeout: 10
+
+TURN:
+  type: move_action_interface/TurnActionInterface
+  namespace: move
+  description: Defines a rotation from the current position of the robot. This movement has not obstacle avoidance.
+  category: movement
+  communication_timeout: 10
+
+DOCK:
+  type: dock_action_interface/DockActionInterface
+  namespace: pp_docker
+  description: The robot will approach the dock_frame (+ the different offsets) with the robot_dock_frame.
+  category: movement
+  communication_timeout: 10
+
+WAIT:
+  type: wait_action_interface/WaitActionInterface
+  namespace: any
+  description: The robot will wait until the timer finishes.
+  category: logic
+
+# SERVICES > RLC
+
+LOCALIZATION_STOP_MODULE:
+  type: std_trigger_service_interface/StdTriggerServiceInterface
+  namespace: robot_local_control/LocalizationComponent/stop_running_module
+  description: Stops current RLC localization module.
+  category: localization
+
+LOCALIZATION_START_MODULE:
+  type: switch_module_service_interface/SwitchModuleServiceInterface
+  namespace: robot_local_control/LocalizationComponent/start_module
+  description: Starts a RLC localization module (mapping_2d, mapping_3d, localization_2d, localization_3d, gps).
+  category: localization
+
+LOCALIZATION_SET_POSE:
+  type: set_pose_2d_stamped_service_interface/SetPose2dStampedServiceInterface
+  namespace: robot_local_control/LocalizationComponent/set_pose
+  description: Sets the position and orientation of the robot. Requires a localization module to be running.
+  category: localization
+
+SAVE_MAP:
+  type: save_map_service_interface/SaveMapServiceInterface
+  namespace: robot_local_control/LocalizationComponent/save_map
+  description: Saves the current map. Requires the mapping_2d module to be running.
+  category: localization
+
+AMCL_SWITCH_ENVIRONMENT:
+  type: set_environment_service_interface/SetEnvironmentServiceInterface
+  namespace: robot_local_control/LocalizationComponent/localization_2d/switch_environment
+  description: Switch the current environment (map).
+  category: localization
+
+AMCL_SAVE_FRAME:
+  type: save_frame_service_interface/SaveFrameServiceInterface
+  namespace: robot_local_control/LocalizationComponent/localization_2d/save_frame
+  description: Saves the transform between a target frame and the fixed frame. Requires the localization_2d module to be running.
+  category: localization
+
+# SERVICES
+
+ELEVATOR:
+  type: elevator_service_interface/ElevatorServiceInterface
+  namespace: robotnik_base_control/set_elevator
+  description: Sets the position of the elevator.
+  category: others
+
+SET_TRIGGER2:
+  type: std_setbool_service_interface/StdSetBoolServiceInterface
+  namespace: notify_event/trigger2
+  description: Publishes a trigger value in a specific service server.
+  category: logic
+
+VIDEO_FRONT_START:
+  type: record_service_interface/StartRecordServiceInterface
+  namespace: /process_executor/record_rgb/record
+  description: Starts recording video from camera streaming.
+  category: sensors
+
+VIDEO_FRONT_STOP:
+  type: record_service_interface/StopRecordServiceInterface
+  namespace: /process_executor/record_rgb/record
+  description: Stops recording video from camera streaming.
+  category: sensors
+
+# PROCEDURES
+
+RLC_GOTO:
+  type: goto_procedure_interface/GoToProcedureInterface
+  namespace: GoToComponent
+  description: The robot will navigate to a specific coordinates of the map. The robot will avoid obstacles in the trajectory.
+  category: navigation
+  frame_id: robot_map
+
+RLC_MOVE:
+  type: move_linear_procedure_interface/MoveLinearProcedureInterface
+  namespace: MoveComponent
+  description: Defines a displacement from the current position of the robot. Y axis displacements are only available for omni-directional robots. This movement has not obstacle avoidance.
+  category: movement
+
+RLC_TURN:
+  type: move_angular_procedure_interface/MoveAngularProcedureInterface
+  namespace: MoveComponent
+  description: Defines a rotation from the current position of the robot. This movement has not obstacle avoidance.
+  category: movement
+
+RLC_CHARGE:
+  type: charge_procedure_interface/ChargeProcedureInterface
+  namespace: ChargeComponent
+  description: The robot will approach the docking station and it will start charging. The docking station needs to be inside of the field of view of the frontal sensors of the robot.
+  category: movement
+
+RLC_UNCHARGE:
+  type: uncharge_procedure_interface/UnchargeProcedureInterface
+  namespace: UnchargeComponent
+  description: The robot will leave the docking station to stop charging.
+  category: movement
+
+RLC_PICK:
+  type: pick_procedure_interface/PickProcedureInterface
+  namespace: PickComponent
+  description: The robot go under a cart and it will pick it. This command requires the robot to have an elevator.
+  category: movement
+
+RLC_PLACE:
+  type: place_procedure_interface/PlaceProcedureInterface
+  namespace: PlaceComponent
+  description: The robot leaves a cart in the current position. This command requires the robot to have an elevator.
+  category: movement
+
+RLC_GOTO_GPS:
+  type: goto_gps_procedure_interface/GoToGPSProcedureInterface
+  namespace: GoToGPSComponent
+  description: The robot will navigate to a specific GPS coordinates. The robot will not avoid obstacles in the trajectory.
+  category: navigation
+
+GOTO_TAG:
+  type: goto_tag_procedure_interface/GoToTagProcedureInterface
+  namespace: GoToComponent
+  description: The robot will navigate to a specific POI of the map. The robot will avoid obstacles in the trajectory.
+  category: navigation
+  get_poi_ns: poi_manager/get_poi
+  frame_id: robot_map
+  default_environment: unknown
+
+# SUBSCRIBERS
+WAIT_TRIGGER1:
+  type: bool_subscriber_interface/BoolSubscriberInterface
+  namespace: wait_event/trigger1
+
+## HANDLER FROM CUSTOM PACKAGE
+CUSTOM_WAIT:
+  type: my_custom_commands_handlers/wait_action_interface/WaitActionInterface
+  namespace: any
+
+PTZ_RGB:
+  type: ptz_action_interface/PtzActionInterface
+  description: Moves the PTZ to the desired position.
+  category: sensors
+  ros_control: False
+  ptz_topic: front_ptz_camera/front_ptz_camera/ptz_command
+
+
+PTZ_TAG_RGB:
+  type: ptz_tag_action_interface/PtzTagActionInterface
+  description: Moves the PTZ to the desired position using a POI as reference.
+  category: sensors
+  ros_control: False
+  ptz_topic: front_ptz_camera/front_ptz_camera/ptz_command
+  pan_joint: robot_front_ptz_camera_pan_joint
+  tilt_joint: robot_front_ptz_camera_tilt_joint
+  zoom_joint: zoom_rgb
+  get_poi_ns: poi_manager/get_poi
+  frame_id: robot_map
+  default_environment: unknown

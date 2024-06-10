@@ -1,0 +1,45 @@
+command_handlers:
+  - GOTO
+  - RLC_GOTO
+  - RLC_MOVE
+  - RLC_TURN
+  - RLC_CHARGE
+  - RLC_UNCHARGE
+  - DOCK
+  - GOTO_TAG
+
+
+GOTO:
+  type: move_base_action_interface/MoveBaseActionInterface
+  namespace: move_base
+  frame_id: $(arg id_robot)_map
+
+RLC_GOTO:
+  type: goto_procedure_interface/GoToProcedureInterface
+  namespace: GoToComponent
+  frame_id: $(arg id_robot)_map
+
+RLC_MOVE:
+  type: move_linear_procedure_interface/MoveLinearProcedureInterface
+  namespace: MoveComponent
+
+RLC_TURN:
+  type: move_angular_procedure_interface/MoveAngularProcedureInterface
+  namespace: MoveComponent
+
+RLC_CHARGE:
+  type: charge_procedure_interface/ChargeProcedureInterface
+  namespace: ChargeComponent
+
+RLC_UNCHARGE:
+  type: uncharge_procedure_interface/UnchargeProcedureInterface
+  namespace: UnchargeComponent
+
+GOTO_TAG:
+  type: goto_tag_procedure_interface/GoToTagProcedureInterface
+  namespace: GoToComponent
+
+DOCK:
+  type: dock_action_interface/DockActionInterface
+  namespace: omni_docker 
+ 

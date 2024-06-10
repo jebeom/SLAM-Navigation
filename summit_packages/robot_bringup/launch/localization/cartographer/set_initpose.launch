@@ -1,0 +1,10 @@
+<launch>
+  <arg name="load_state_filename" default=""/>
+
+  <node name="set_initpose" pkg="cartographer_ros" type="set_initpose_from_rviz" output="screen"
+        args="
+              -configuration_directory $(find robot_bringup)/config/localization/cartographer
+              -configuration_basename localization_3d.lua
+              -load_state_filename $(arg load_state_filename)" >
+  </node>
+</launch>

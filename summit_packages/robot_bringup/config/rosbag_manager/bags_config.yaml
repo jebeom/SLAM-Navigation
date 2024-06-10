@@ -1,0 +1,20 @@
+output_folder: $(find robot_bringup)/maps
+buffer_size: 2048
+chunk_size: 768
+topics:
+ - /robot/imu/data
+ - /robot/robotnik_base_control/odom
+ - /robot/top_3d_laser/points
+ - /robot/point_cloud_transport/point_cloud/draco
+ - /robot/gps/fix
+ - /robot/gps/fix_output
+ - /robot/gps/navpvt
+ - /robot/front_laser/scan
+ - /robot/rear_laser/scan
+ - /robot/front_rgbd_camera/rgb/image_raw/compressed
+ - /tf
+ - /tf_static
+split: false
+split_size: 1024
+compression: false
+regex: true

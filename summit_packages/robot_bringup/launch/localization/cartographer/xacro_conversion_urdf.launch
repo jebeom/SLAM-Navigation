@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="robot_xacro" default="$(optenv ROBOT_XACRO summit_xl_std.urdf.xacro)"/>
+    <arg name="robot_urdf" default="$(optenv ROBOT_URDF robot.urdf)"/>
+    <arg name="xacro_folder" default="$(find summit_xl_description)/robots/" />
+    <arg name="urdf_folder" default="$(find robot_bringup)/config/localization/cartographer/"/>
+    <node name="xacro_conversion_urdf" pkg="xacro" type="xacro" args="--inorder -o $(arg urdf_folder)$(arg robot_urdf) $(arg xacro_folder)$(arg robot_xacro)" output="screen"/>
+</launch>

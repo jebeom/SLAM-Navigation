@@ -1,0 +1,9 @@
+# Server config
+ip_address: $(arg ip_address)
+port: $(arg port)
+xmlrpc_log: $(arg xmlrpc_log)
+verbose: $(arg verbose)
+
+# Gripper joint limits in millimeters
+min_pos: 1
+max_pos: 39

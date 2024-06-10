@@ -1,0 +1,5 @@
+scan_filter_chain:
+- name: intensity
+  type: robotnik_laser_filters/LinearInterpolationLaserScanIntensityFilter
+  params:
+    min_interpolated_intensity: 93

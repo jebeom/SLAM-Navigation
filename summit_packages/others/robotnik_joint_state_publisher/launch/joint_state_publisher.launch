@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="id_robot" default="$(optenv ROBOT_ID robot)"/>
+    <arg name="prefix" default="$(arg id_robot)_" />    
+    
+    <arg name="base_frame" default="$(arg prefix)base_footprint" />    
+    <arg name="fixed_frame" default="$(arg prefix)odom" />    
+
+    
+    <node name="joint_state_publisher" pkg="robotnik_joint_state_publisher" type="joint_state_publisher_node" output="screen">
+        <rosparam command="load" file="$(find robotnik_joint_state_publisher)/config/publisher.yaml" subst_value="true"/>
+    </node>
+    
+</launch>

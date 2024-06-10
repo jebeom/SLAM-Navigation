@@ -1,0 +1,7 @@
+ip_address: $(arg ip_address)
+port: 502
+digital_inputs_addr: 999
+digital_outputs_addr: 1999
+digital_inputs: 400
+digital_outputs: 80
+big_endian: false

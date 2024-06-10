@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="device_manufacturer" default="$(optenv ROBOT_SAFETY_DEVICE_MANUFACTURER schmersal)"/>
+  <arg name="device_model" default="$(optenv ROBOT_SAFETY_DEVICE_MODEL psc1_c100)"/>
+  <arg name="ip_address" default="$(optenv ROBOT_SAFETY_DEVICE_IP 192.168.0.250)"/>
+
+  <arg name="laser_count" default="2"/>
+  <arg name="warning_zones_per_laser" default="1"/>
+	<arg name="desired_freq" default="1.0" />
+
+  <node name="safety_module" pkg="robotnik_eipscanner" type="eipscanner_node" output="screen">
+    <rosparam file="$(find robot_bringup)/config/safety/eip/$(arg device_manufacturer)/common.yaml" command="load" subst_value="true"/>
+    <rosparam file="$(find robot_bringup)/config/safety/eip/$(arg device_manufacturer)/$(arg device_model).yaml" command="load" subst_value="true"/>
+    <param name="desired_freq" value="$(arg desired_freq)"/>
+    <param name="laser_count" value="$(arg laser_count)"/>
+    <param name="warning_zones_per_laser" value="$(arg warning_zones_per_laser)"/>
+  </node>
+
+</launch>

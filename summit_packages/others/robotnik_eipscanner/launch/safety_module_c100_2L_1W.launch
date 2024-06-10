@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="ip_address" default="192.168.0.250"/>
+    <arg name="laser_count" default="2"/>
+    <arg name="warning_zones_per_laser" default="1"/>
+	<arg name="desired_freq" default="1.0" />
+    <node name="safety_module" pkg="robotnik_eipscanner" type="eipscanner_node" output="screen">
+        <rosparam file="$(find robotnik_eipscanner)/config/common.yaml" command="load" subst_value="true"/>
+        <rosparam file="$(find robotnik_eipscanner)/config/psc1_c100_input.yaml" command="load" subst_value="true"/>
+        <param name="desired_freq" value="$(arg desired_freq)"/>
+        <param name="laser_count" value="$(arg laser_count)"/>
+        <param name="warning_zones_per_laser" value="$(arg warning_zones_per_laser)"/>
+    </node>
+</launch>

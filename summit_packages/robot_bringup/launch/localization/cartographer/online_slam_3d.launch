@@ -1,0 +1,47 @@
+<!--
+  Copyright 2016 The Cartographer Authors
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<launch>
+  <arg name="scan_topic" default="$(optenv ROBOT_LOCALIZATION_SCAN_TOPIC front_laser/scan)"/>
+  <arg name="scan3d_topic" default="top_3d_laser/points"/>
+  <arg name="odom_topic" default="robotnik_base_control/odom"/>
+  <arg name="imu_topic" default="imu/data"/>
+  <arg name="gps_topic" default="gps/fix_output"/>
+  <arg name="two_d_mode" default="false"/>
+
+
+  <node name="cartographer_mapping_node" pkg="cartographer_ros"
+      type="cartographer_node" args="
+          -configuration_directory $(find robot_bringup)/config/localization/cartographer
+          -configuration_basename slam_3d.lua
+          -start_trajectory_with_default_topics"
+      output="screen">
+    <!-- We can add -load_state_filename /route/to/pbstream_file.pbstream as a cartographer_node arg to load an already saved map-->
+
+    <remap from="scan" to="$(arg scan_topic)" />
+    <remap from="points2" to="$(arg scan3d_topic)" />
+    <remap from="odom" to="$(arg odom_topic)" />
+    <remap from="imu" to="$(arg imu_topic)" />
+    <remap from="fix" to="$(arg gps_topic)" />
+    <param name="two_d_mode" value="$(arg two_d_mode)" />
+  </node>
+
+  <node name="cartographer_occupancy_grid_node" pkg="cartographer_ros"
+      type="cartographer_occupancy_grid_node" args="-resolution 0.03" />
+
+  <include file="$(find robot_bringup)/launch/localization/cartographer/cartographer_pbstream_creator.launch"/>
+
+</launch>

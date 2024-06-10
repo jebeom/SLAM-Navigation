@@ -1,0 +1,28 @@
+type: robot_local_control_components/SignalManagerComponent
+
+desired_freq: 2.0
+robot_status_topic: robot_local_control/state
+#robot_base_hw_status_topic: robotnik_base_hw/status
+min_battery_level: 15
+
+# Time in seconds for change to the new state
+time_before_change_state: 0.5
+
+# signal_manager nodes name list
+signal_manager_nodes_namespaces:
+  - leds_driver
+
+# Signal modes list, ordered by priority
+# check the string in the robotnik_signal_msgs/SignalStatus
+signals:
+ - emergency_stop
+ - safety_obstacle_detected
+ - base_controller_error
+ - arm_controller_error
+ - sensor_error
+ - charging
+ - low_battery
+ - lowering_elevator
+ - raising_elevator
+ - robot_moving
+ - robot_idle

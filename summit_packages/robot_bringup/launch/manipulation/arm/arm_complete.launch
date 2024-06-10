@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+  <launch>
+  <arg name="id_robot" default="$(optenv ROBOT_ID robot)"/>
+  <arg name="prefix" default="$(arg id_robot)_"/>
+
+  <!-- 1 ARM -->
+  <arg name="arm_1_model" default="$(optenv ROBOT_ARM_1_MODEL none)"/>
+  <arg name="arm_1_manufacturer" default="$(optenv ROBOT_ARM_1_MANUFACTURER ur)"/>
+  <arg name="arm_1_ip" default="$(optenv ROBOT_ARM_1_IP 192.168.0.210)"/>
+  <arg name="arm_1_reverse_port" default="$(optenv ROBOT_ARM_1_REVERSE_PORT 50001)"/>
+  <arg name="arm_1_sender_port" default="$(optenv ROBOT_ARM_1_SENDER_PORT 50002)"/>
+  <arg name="arm_1_trajectory_port" default="$(optenv ROBOT_ARM_1_TRAJECTORY_PORT 50003)"/>
+  <arg name="arm_1_script_command_port" default="$(optenv ROBOT_ARM_1_SCRIPT_COMMAND_PORT 50004)"/>
+  <arg name="arm_1_id" default="$(optenv ROBOT_ARM_1_ID arm)"/>
+  <arg name="arm_1_run_traj_control" default="$(optenv ROBOT_ARM_1_ENABLE_TRAJECTORY_CONTROL false)"/>
+  <arg name="arm_1_kinematics_config_file" default="$(optenv ROBOT_ARM_1_KINEMATICS_CONFIG_FILE)"/>
+
+  <!-- 2 ARM -->
+  <arg name="arm_2_model" default="$(optenv ROBOT_ARM_2_MODEL none)"/>
+  <arg name="arm_2_manufacturer" default="$(optenv ROBOT_ARM_2_MANUFACTURER ur)"/>
+  <arg name="arm_2_ip" default="$(optenv ROBOT_ARM_2_IP 192.168.0.210)"/>
+  <arg name="arm_2_reverse_port" default="$(optenv ROBOT_ARM_2_REVERSE_PORT 50001)"/>
+  <arg name="arm_2_sender_port" default="$(optenv ROBOT_ARM_2_SENDER_PORT 50002)"/>
+  <arg name="arm_2_trajectory_port" default="$(optenv ROBOT_ARM_2_TRAJECTORY_PORT 50003)"/>
+  <arg name="arm_2_script_command_port" default="$(optenv ROBOT_ARM_2_SCRIPT_COMMAND_PORT 50004)"/>
+  <arg name="arm_2_id" default="$(optenv ROBOT_ARM_2_ID second_arm)"/>
+  <arg name="arm_2_run_traj_control" default="$(optenv ROBOT_ARM_2_ENABLE_TRAJECTORY_CONTROL false)"/>
+  <arg name="arm_2_kinematics_config_file" default="$(optenv ROBOT_ARM_2_KINEMATICS_CONFIG_FILE)"/>
+
+  <!-- 1 -->
+  <include if="$(eval arm_1_model != 'none')" file="$(find robot_bringup)/launch/manipulation/arm/$(arg arm_1_manufacturer)/$(arg arm_1_manufacturer)_complete.launch">
+    <arg name="prefix" value="$(arg prefix)"/>
+    <arg name="model" value="$(arg arm_1_model)"/>
+    <arg name="ip_address" value="$(arg arm_1_ip)"/>
+    <arg name="reverse_port" value="$(arg arm_1_reverse_port)"/>
+    <arg name="script_sender_port" value="$(arg arm_1_sender_port)"/>
+    <arg name="trajectory_port" value="$(arg arm_1_trajectory_port)"/>
+    <arg name="script_command_port" value="$(arg arm_1_script_command_port)"/>
+    <arg name="namespace" value="$(arg arm_1_id)"/>
+    <arg name="run_traj_control" value="$(arg arm_1_run_traj_control)"/>
+    <arg name="kinematics_config_file" value="$(arg arm_1_kinematics_config_file)"/>
+  </include>
+
+  <!-- 2 -->
+  <include if="$(eval arm_2_model != 'none')" file="$(find robot_bringup)/launch/manipulation/arm/$(arg arm_2_manufacturer)/$(arg arm_2_manufacturer)_complete.launch">
+    <arg name="prefix" value="$(arg prefix)"/>
+    <arg name="model" value="$(arg arm_2_model)"/>
+    <arg name="ip_address" value="$(arg arm_2_ip)"/>
+    <arg name="reverse_port" value="$(arg arm_2_reverse_port)"/>
+    <arg name="script_sender_port" value="$(arg arm_2_sender_port)"/>
+    <arg name="trajectory_port" value="$(arg arm_2_trajectory_port)"/>
+    <arg name="script_command_port" value="$(arg arm_2_script_command_port)"/>
+    <arg name="namespace" value="$(arg arm_2_id)"/>
+    <arg name="run_traj_control" value="$(arg arm_2_run_traj_control)"/>
+    <arg name="kinematics_config_file" value="$(arg arm_2_kinematics_config_file)"/>
+  </include>
+
+</launch>

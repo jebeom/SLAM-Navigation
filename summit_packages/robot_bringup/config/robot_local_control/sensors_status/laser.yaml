@@ -1,0 +1,5 @@
+sensors:
+  $(arg laser_id):
+    type: robot_local_control_components/LaserComponent
+    desired_freq: 1.0
+    topic: $(arg topic)

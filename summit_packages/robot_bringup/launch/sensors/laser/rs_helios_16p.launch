@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+
+<launch>
+
+	<arg name="sim" default="$(optenv ROBOT_RUN_SIMULATION false)"/>
+
+  <arg name="id_robot" default="$(optenv ROBOT_ID robot)"/>
+  <arg name="prefix" default="$(arg id_robot)_" />
+  <arg name="angle_min"  default="-1.5708"/>
+  <arg name="angle_max"  default="1.5708"/>
+
+  <arg name="port" default="" /> <!-- not used -->
+  <arg name="node_name" default="rslidar" />
+  <arg name="scan_topic" default="points" />
+  <arg name="frame_id" default="$(arg prefix)3d_laser_link" />
+  <arg name="model" default="RS16" />
+  <arg name="ip_address" default="192.168.1.10" />
+  <arg name="msop_port" default="6699" />
+  <arg name="difop_port" default="7788" />
+
+
+  <arg name="lidar_type" default="RSHELIOS_16P"/>
+
+  <node unless="$(arg sim)" pkg="rslidar_sdk" name="$(arg node_name)" type="rslidar_sdk_node" output="screen">
+    <rosparam command="load" file="$(find rslidar_sdk)/config/config.yaml" subst_value="true"/>
+    <param name="lidar_type" value="$(arg lidar_type)"/>
+    <param name="msop_port" value="$(arg msop_port)"/>
+    <param name="difop_port" value="$(arg difop_port)"/>
+    <param name="frame_id" value="$(arg frame_id)"/>
+    <param name="config_path" value=""/>
+    <remap from="/rslidar_points" to="$(arg node_name)/$(arg scan_topic)"/>    
+  </node>
+
+
+  <group ns="$(arg node_name)">
+    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan">
+
+      <remap from="cloud_in" to="$(arg scan_topic)"/>
+      <remap from="scan" to="scan"/>
+      <param name="target_frame" value="$(arg id_robot)_base_footprint"/>
+      <rosparam command="load" file="$(find robot_bringup)/config/sensors/laser/rs_lidar16_to_2d.yaml"/>
+      <param name="angle_min" value=""/>
+      <param name="angle_max" value=""/>
+    </node>
+  </group>
+
+</launch>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="robot_id" default="robot" />
+    <arg name="prefix" default="$(arg robot_id)_" />
+    <arg name="gripper_model" default="hand_e" />
+    <arg name="min_pos" default="0"/>
+    <arg name="max_pos" default="50"/>
+    <arg name="verbose" default="false" />
+    
+    <!-- Load hardware interface config -->
+    <rosparam file="$(find ur_gripper_hw_interface)/config/$(arg gripper_model)_hardware.yaml" command="load" subst_value="True"/>
+
+    <!-- Start ur gripper hardware interface node -->
+    <node name="ur_gripper_hw_interface" pkg="ur_gripper_hw_interface" type="ur_gripper_hw_interface_node" output="screen"/>
+
+</launch>

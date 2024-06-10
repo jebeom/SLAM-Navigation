@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="ping_time_monitor_topic_name" default="/ping_time_monitor/status"/>
+  <arg name="packet_loss_stop_threshold" default="100.0"/>
+  <arg name="packet_loss_start_threshold" default="0.0"/>
+  <arg name="rosmon_node" default="rosmon_node_name"/>
+
+
+  <node pkg="node_manager" type="node_manager.py" name="node_manager" output="screen">
+  	<param name="ping_time_monitor_topic_name" value="$(arg ping_time_monitor_topic_name)" type="string"/>
+    <param name="packet_loss_stop_threshold" value="$(arg packet_loss_stop_threshold)" type="double"/>
+    <param name="packet_loss_start_threshold" value="$(arg packet_loss_start_threshold)" type="double"/>
+    <param name="rosmon_node" value="$(arg rosmon_node)" type="string"/>
+
+  </node>
+
+</launch>

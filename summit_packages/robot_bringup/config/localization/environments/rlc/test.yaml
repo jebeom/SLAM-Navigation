@@ -1,0 +1,5 @@
+test:
+  environment_type: pbstream_3d
+  config_package: robot_bringup
+  multimap_environment: config/localization/environments/multimap/test.yaml
+  pbstream_map: maps/test/test.pbstream

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>summit_xl_advanced_sim</name>
+  <version>1.0.0</version>
+  <description>The summit_xl_advanced_sim package</description>
+
+  <author email="jgomez@robotnik.es">José Gómez</author>
+  <maintainer email="jgomez@robotnik.es">José Gómez</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+
+  </export>
+</package>

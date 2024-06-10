@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="pad_model" default="$(optenv ROBOT_PAD_MODEL ps4)"/>
+  <arg name="pad_deadzone" default="$(optenv ROBOT_PAD_DEADZONE 0.12)" />
+  <arg name="joy_dev" default="$(optenv ROBOT_PAD_DEV /dev/input/js_base)" />
+  <arg name="arm_model" default="$(optenv ROBOT_ARM_1_MODEL j2n6s200)"/>
+  <arg name="cmd_vel_topic" default="$(optenv ROBOT_PAD_TWISTMUX pad_teleop/cmd_vel)" />
+  <arg name="cmd_ptz_topic" default="$(optenv ROBOT_PAD_PTZ_COMMAND front_ptz_camera/front_ptz_camera/ptz_command)" />
+  
+  <arg name="joy_topic" default="$(optenv ROBOT_PAD_TOPIC joy)" />
+  <arg name="node_name" default="pad_teleop" />
+
+  <arg name="debug" default="false"/>
+  <arg if="$(arg debug)" name="launch_prefix" default="terminator -m -x gdb --args"/>
+  <arg unless="$(arg debug)" name="launch_prefix" default=""/>
+
+  <arg name="autorepeat_rate" default="10.0"/>
+  <arg name="pad_config" default="$(find robot_bringup)/config/bringup/pad/$(arg pad_model).yaml" />
+
+  <!-- joy node -->
+  <node pkg="joy" type="joy_node" name="$(arg node_name)" output="screen" respawn="true">
+    <param name="dev" type="string" value="$(arg joy_dev)" />
+    <param name="deadzone" value="$(arg pad_deadzone)" />
+    <param name="autorepeat_rate" value="$(arg autorepeat_rate)" type="double" />
+  </node>
+
+  <!-- Parameters -->
+  <node name="robotnik_pad" pkg="robotnik_pad" type="robotnik_pad_node" output="screen" launch-prefix="$(arg launch_prefix)">
+    <rosparam command="load" file="$(arg pad_config)" subst_value="true"/>
+  </node>
+
+</launch>

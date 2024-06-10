@@ -1,0 +1,31 @@
+ Program
+   Variables Setup
+   Robot Program
+     Control by robot
+     'Wait: 0.5'
+   Thread_1
+     xmlrpc_ip≔"192.168.0.200"
+     xmlrpc_port≔"50007"
+     gripper_xmlrpc≔rpc_factory("xmlrpc", "http://"+xmlrpc_ip+":"+xmlrpc_port)
+     last_position≔0
+     gripper_status≔"unknown"
+     gripper_desired≔0
+     Loop
+       gripper_command≔gripper_xmlrpc.get_command()
+       Switch gripper_command
+         Case 1
+           'IDLE COMMAND'
+         Case 2
+           'MOVE COMMAND'
+           last_position = gripper_desired
+           gripper_desired≔gripper_xmlrpc.get_desired_pos()
+           If gripper_desired>=last_position
+             gripper_status≔"release"
+             tfg_release(gripper_desired,0,True)
+           Else
+             gripper_status≔"grip"
+             tfg_flexible_grip(diameter=gripper_desired+11.5, force=10.0, external_grip=True, stop_if_no_force=False, tool_index=0)
+           tfg_flexible_grip(diameter=gripper_desired+11.5, force=10.0, external_grip=True, stop_if_no_force=False, tool_index=0)
+           gripper_xmlrpc.set_idle()
+        gripper_xmlrpc.set_real_pos(get_tfg_Diameter()-13.5)
+       Wait: 0.5

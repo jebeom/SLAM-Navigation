@@ -1,0 +1,54 @@
+
+<launch>
+	<arg name="sim" default="$(optenv ROBOT_RUN_SIMULATION false)"/>
+
+  <arg name="port"        default="55115"/> <!-- not used for this node -->
+  <arg name="node_name"   default="pilz_laser"/>
+  <arg name="scan_topic"            default="scan"/>
+
+  <!-- IP-Address of Safety laser scanner -->
+  <arg name="ip_address" default="192.168.0.10" />
+
+  <!-- Name of the scanner (required to run multiple scanners) which by convention
+       is the prefix for the urdf description. -->
+  <arg name="frame_id" default="front_laser" />
+
+  <!-- Start angle of measurement in radian -->
+  <arg name="angle_min" default="$(eval radians(-137.4))" />
+
+  <!-- End angle of measurement in radian -->
+
+  <arg name="angle_max" default="$(eval radians(137.4))" />
+
+  <!-- Publishing of intensities -->
+  <arg name="intensities" default="true" />
+
+  <!-- Scan resolution in radian -->
+  <arg name="resolution" default="$(eval radians(0.155))" />
+
+  <!-- IP-Address of host machine -->
+  <arg name="host_ip" default="192.168.0.200" />
+
+  <!-- UDP Port on which monitoring frames (scans) should be received -->
+  <arg name="host_udp_port_data" value="$(arg port)" />
+
+  <!-- UDP Port used to send commands (start/stop) and receive the corresponding replies -->
+  <arg name="host_udp_port_control" value="$(eval host_udp_port_data + 1)" />
+
+  <!-- Set the following to true in order to publish scan data as soon as a UDP packet is ready, instead of waiting for a full scan -->
+  <arg name="fragmented_scans" default="false" />
+
+  <node unless="$(arg sim)" name="$(arg node_name)" type="psen_scan_v2_node" pkg="psen_scan_v2" output="screen" required="false">
+    <param name="sensor_ip" value="$(arg ip_address)" />
+    <param name="tf_prefix" value="$(arg frame_id)" />
+    <param name="angle_start" value="$(arg angle_min)" />
+    <param name="angle_end" value="$(arg angle_max)" />
+    <param name="intensities" value="$(arg intensities)" />
+    <param name="resolution" value="$(arg resolution)" />
+    <param name="host_ip" value="$(arg host_ip)" />
+    <param name="host_udp_port_data" value="$(arg host_udp_port_data)" />
+    <param name="host_udp_port_control" value="$(arg host_udp_port_control)" />
+    <param name="fragmented_scans" value="$(arg fragmented_scans)" />
+  </node>
+
+</launch>

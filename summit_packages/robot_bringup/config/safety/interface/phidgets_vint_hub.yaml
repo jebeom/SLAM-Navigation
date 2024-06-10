@@ -1,0 +1,27 @@
+# config for Phidgets I/O modules
+# format:
+#  id: inputs_1
+#  type:   DigitalInput (DigitalInput / DigitalOutput)
+#  hub_port:  0
+#  channel_size:  4 (number of channels)
+config:
+ -
+   id: laser_status
+   type: DigitalInput
+   hub_port:  2
+   channel_size:  4
+ -
+   id: elevator_status
+   type: DigitalInput
+   hub_port:  1
+   channel_size:  4
+ -
+   id: laser_zones
+   type: DigitalOutput
+   hub_port:  0
+   channel_size:  4
+ -
+   id: elevator_actions
+   type: DigitalOutput
+   hub_port:  3
+   channel_size:  4

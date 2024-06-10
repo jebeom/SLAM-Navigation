@@ -1,0 +1,23 @@
+ Program
+   Variables Setup
+   Robot Program
+     Control by robot
+     Wait: 0.5
+   Thread_1
+     rq_activate_and_wait()
+     xmlrpc_ip≔"192.168.0.200"
+     xmlrpc_port≔"50007"
+     gripper_xmlrpc≔rpc_factory("xmlrpc", "http://"+xmlrpc_ip+":"+xmlrpc_port)
+     gripper_desired≔0
+     Loop
+       gripper_command≔gripper_xmlrpc.get_command()
+       Switch gripper_command
+         Case 1
+           'IDLE COMMAND'
+         Case 2
+           'MOVE COMMAND'
+           gripper_desired=gripper_xmlrpc.get_desired_pos()
+           rq_move_and_wait_mm(gripper_desired)
+           gripper_xmlrpc.set_idle()
+       current_pos≔rq_current_pos_mm()
+       gripper_xmlrpc.set_real_pos(current_pos)
