@@ -1,20 +1,11 @@
 ## SLAM & Navigation
 
-I used the [cartographer](https://github.com/cartographer-project/cartographer_ros) and [gmapping](https://github.com/ros-perception/slam_gmapping) to perform SLAM. The mobile robot is [Robotnik's](https://robotnik.eu/) Summit, and the manipulator robot is [Franka's](https://franka.de/) PANDA. 
+I used the [cartographer](https://github.com/cartographer-project/cartographer_ros) and [gmapping](https://github.com/ros-perception/slam_gmapping) to perform SLAM. The mobile robot is [Robotnik's](https://robotnik.eu/) SUMMIT-XL STEEL, and the manipulator is [Franka's](https://franka.de/) FR3.
 
 This repository is for **Real world** purposes.
 
-If you want to test in a **Simulation** environment, follow these steps:
+If you want to test in a Simulation environment, See the **Simualtion branch**
 
-```
-git clone <KIST-SLAM-Navigation_repo_url>
-cd KIST-SLAM-Navigation
-```
-and then
-
-```
-git checkout Simulation
-```
 
 ### Software selection -- OS:
 Currently tested and working configurations:
