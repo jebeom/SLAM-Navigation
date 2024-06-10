@@ -21,7 +21,7 @@ cd <KIST-SLAM-Navigation_repo_url>
 mv <KIST-SLAM-Navigation_repo_url> src
 cd src
 ```
-### Checkout Simulation branch and build 
+### Transition to Simulation branch and build 
 
 ```
 git checkout Simulation
