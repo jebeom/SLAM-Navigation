@@ -4,6 +4,18 @@ I used the [cartographer](https://github.com/cartographer-project/cartographer_r
 
 This repository is for **Real world** purposes.
 
+If you want to test in a **Simulation** environment, follow these steps:
+
+```
+git clone <KIST-SLAM-Navigation_repo_url>
+cd KIST-SLAM-Navigation
+```
+and then
+
+```
+git checkout Simulation
+```
+
 ### Software selection -- OS:
 Currently tested and working configurations:
 
