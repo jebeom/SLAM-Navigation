@@ -12,19 +12,20 @@ Currently tested and working configurations:
 
 ---
 ## Quick Run 
+
 ### Make Work Space
 ```
 mkdir <your-catkin-work-space>
 cd <your-catkin-work-space>
 git clone <KIST-SLAM-Navigation_repo_url>
-cd <KIST-SLAM-Navigation_repo>
-mv <KIST-SLAM-Navigation_repo> src
+mv KIST-SLAM-Navigation src
 cd src
 ```
 ### Transition to Simulation branch and build 
 
 ```
 git checkout Simulation
+cd ..
 catkin build && source devel/setup.bash
 ```
 ### Simulation(Rviz & Gazebo)
