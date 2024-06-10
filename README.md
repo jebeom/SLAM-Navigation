@@ -17,8 +17,8 @@ Currently tested and working configurations:
 mkdir <your-catkin-work-space>
 cd <your-catkin-work-space>
 git clone <KIST-SLAM-Navigation_repo_url>
-cd <KIST-SLAM-Navigation_repo_url>
-mv <KIST-SLAM-Navigation_repo_url> src
+cd <KIST-SLAM-Navigation_repo>
+mv <KIST-SLAM-Navigation_repo> src
 cd src
 ```
 ### Transition to Simulation branch and build 
