@@ -25,6 +25,16 @@ Currently tested and working configurations:
 ---
 ## Quick Run 
 
+### Make Work Space
+```
+mkdir <your-catkin-work-space>
+cd <your-catkin-work-space>
+git clone <KIST-SLAM-Navigation_repo_url>
+cd <KIST-SLAM-Navigation_repo_url>
+mv <KIST-SLAM-Navigation_repo_url> src
+cd src
+catkin build && source devel/setup.bash
+```
 ### Lidar Sensor Merge
 ```
 roslaunch summit_xl_bringup merge_laser.launch
